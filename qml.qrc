@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>OrdersPage/Order.qml</file>
+        <file>OrdersPage/OrdersPage.qml</file>
+        <file>OrdersPage/OrdersTable.qml</file>
+        <file>OrdersPage/qmldir</file>
+        <file>Theme/Theme.qml</file>
+        <file>Theme/qmldir</file>
+        <file>OrdersPage/OrderDetails.qml</file>
+    </qresource>
+</RCC>
