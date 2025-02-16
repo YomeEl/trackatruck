@@ -25,8 +25,8 @@ isEmpty(PGVERSION) {
 }
 message("using PostgreSQL $$PGVERSION")
 
-win32:INCLUDEPATH += "C:/Program Files/PostgreSQL/" + $${PGVERSION} + "/include"
-win32:LIBS += "C:/Program Files/PostgreSQL/" + $${PGVERSION} + "/lib/libpq.lib"
+win32:INCLUDEPATH += "C:/Program Files/PostgreSQL/$$PGVERSION/include"
+win32:LIBS += "C:/Program Files/PostgreSQL/$$PGVERSION/lib/libpq.lib"
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
