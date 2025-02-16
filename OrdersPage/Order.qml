@@ -10,7 +10,7 @@ Rectangle {
 
     property string route;
     property string driver;
-    property int warningLevel: 2;
+    property int warningLevel: 0;
     property var colors: [theme.background, theme.warningLow, theme.warningHigh]
     property var accentColors: [theme.accent, theme.warningLowAccent, theme.warningHighAccent]
     property bool useAccent: false

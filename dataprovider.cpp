@@ -119,19 +119,29 @@ QVector<Order> DataProvider::getOrders(const QString &condition)
         QString toAddress = query.value(9).toString();
         // order
         QDateTime createdAt = query.value(10).toDateTime();
+        QString createdAtString = convertDate(createdAt);
         QDateTime sentAt = query.value(11).toDateTime();
+        QString sentAtString = convertDate(sentAt);
         QDateTime receivedAt = query.value(12).toDateTime();
+        QString receivedAtString = convertDate(receivedAt);
         bool finished = query.value(13).toBool();
         float distance = query.value(14).toFloat();
         QString description = query.value(15).toString();
-        float value = query.value(16).toFloat();
+
+        QString valueStr = query.value(16).toString();
+        valueStr.remove(QRegExp("[^0-9,]"));
+        valueStr.replace(',', '.');
+        double value = valueStr.toDouble();
 
         vec.append({
             driverName, driverContractDate,
             truckModel, truckNumber, truckLastMileage, truckLastMaintananceDate,
             fromName, fromAddress,
             toName, toAddress,
-            createdAt, sentAt, receivedAt, finished, distance, description, value
+            createdAt, createdAtString,
+            sentAt, sentAtString,
+            receivedAt, receivedAtString,
+            finished, distance, description, value
         });
     }
     _db.close();
@@ -181,4 +191,10 @@ DataProvider::DataProvider()
     _db.setDatabaseName("trackatruck");
     _db.setUserName(username);
     _db.setPassword(password);
+}
+
+QString DataProvider::convertDate(QDateTime &date)
+{
+    if (!date.isValid() || date.isNull()) return "-";
+    return date.toString("dd.MM.yyyy hh:mm:ss");
 }

@@ -40,10 +40,16 @@ QVariant OrdersList::data(const QModelIndex &index, int role) const
 		return QVariant::fromValue(_orders[index.row()].toAddress);
 	case roles::CreatedAtRole:
 		return QVariant::fromValue(_orders[index.row()].createdAt);
+    case roles::CreatedAtStringRole:
+        return QVariant::fromValue(_orders[index.row()].createdAtString);
 	case roles::SentAtRole:
 		return QVariant::fromValue(_orders[index.row()].sentAt);
+    case roles::SentAtStringRole:
+        return QVariant::fromValue(_orders[index.row()].sentAtString);
 	case roles::ReceivedAtRole:
 		return QVariant::fromValue(_orders[index.row()].receivedAt);
+    case roles::ReceivedAtStringRole:
+        return QVariant::fromValue(_orders[index.row()].receivedAtString);
 	case roles::FinishedRole:
 		return QVariant::fromValue(_orders[index.row()].finished);
 	case roles::DistanceRole:
@@ -71,8 +77,11 @@ QHash<int, QByteArray> OrdersList::roleNames() const
 	names[roles::ToNameRole] = "toName";
 	names[roles::ToAddressRole] = "toAddress";
 	names[roles::CreatedAtRole] = "createdAt";
+    names[roles::CreatedAtStringRole] = "createdAtString";
 	names[roles::SentAtRole] = "sentAt";
+    names[roles::SentAtStringRole] = "sentAtString";
 	names[roles::ReceivedAtRole] = "receivedAt";
+    names[roles::ReceivedAtStringRole] = "receivedAtString";
 	names[roles::FinishedRole] = "finished";
 	names[roles::DistanceRole] = "distance";
 	names[roles::DescriptionRole] = "description";

@@ -53,12 +53,15 @@ struct Order
     QString toAddress;
 
     QDateTime createdAt;
+    QString createdAtString;
     QDateTime sentAt;
+    QString sentAtString;
     QDateTime receivedAt;
+    QString receivedAtString;
     bool finished;
     float distance;
     QString description;
-    float value;
+    double value;
 };
 Q_DECLARE_METATYPE(Order)
 

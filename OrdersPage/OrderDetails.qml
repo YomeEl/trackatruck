@@ -8,7 +8,8 @@ Rectangle {
 
     property var model: null;
 
-    color: theme.background
+    height: childrenRect.height
+    width: childrenRect.width
 
     Column {
         spacing: 5
@@ -16,59 +17,38 @@ Rectangle {
         visible: root.model !== null
         Text {
             id: driverName_text
+            visible: root.model && root.model.driverName
             text: root.model ? 'Имя водителя: ' + root.model.driverName : 'Загрузка...'
         }
         Text {
-            id: driverContractDate_text
-            text: root.model ? 'Дата договора: ' + root.model.driverContractDate : 'Загрузка...'
-        }
-        Text {
             id: truckModel_text
+            visible: root.model && root.model.truckModel
             text: root.model ? 'Грузовик: ' + root.model.truckModel : 'Загрузка...'
         }
         Text {
             id: truckNumber_text
+            visible: root.model && root.model.truckModel
             text: root.model ? 'Гос. номер: ' + root.model.truckNumber : 'Загрузка...'
         }
         Text {
-            id: truckLastMilage_text
-            text: root.model ? 'Пробег: ' + root.model.truckLastMilage : 'Загрузка...'
-        }
-        Text {
-            id: truckLastMaintananceDate_text
-            text: root.model ? 'Дата ТО: ' + root.model.truckLastMaintananceDate : 'Загрузка...'
-        }
-        Text {
             id: fromName_text
-            text: root.model ? 'Отправитель: ' + root.model.fromName : 'Загрузка...'
-        }
-        Text {
-            id: fromAddress_text
-            text: root.model ? 'Адрес отправителя: ' + root.model.fromAddress : 'Загрузка...'
+            text: root.model ? 'Отправитель: ' + root.model.fromName + ', ' + root.model.fromAddress : 'Загрузка...'
         }
         Text {
             id: toName_text
-            text: root.model ? 'Получатель: ' + root.model.toName : 'Загрузка...'
-        }
-        Text {
-            id: toAddress_text
-            text: root.model ? 'Адрес получателя: ' + root.model.toAddress : 'Загрузка...'
+            text: root.model ? 'Получатель: ' + root.model.toName + ', ' + root.model.toAddress : 'Загрузка...'
         }
         Text {
             id: createdAt_text
-            text: root.model ? 'Создан: ' + root.model.createdAt : 'Загрузка...'
+            text: root.model ? 'Создан: ' + root.model.createdAtString : 'Загрузка...'
         }
         Text {
             id: sentAt_text
-            text: root.model ? 'Отправлен: ' + root.model.sentAt : 'Загрузка...'
+            text: root.model ? 'Отправлен: ' + root.model.sentAtString : 'Загрузка...'
         }
         Text {
             id: receivedAt_text
-            text: root.model ? 'Получен: ' + root.model.receivedAt : 'Загрузка...'
-        }
-        Text {
-            id: finished_text
-            text: root.model ? 'Закончен: ' + root.model.finished : 'Загрузка...'
+            text: root.model ? 'Получен: ' + root.model.receivedAtString : 'Загрузка...'
         }
         Text {
             id: distance_text

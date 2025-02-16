@@ -27,6 +27,8 @@ public:
 private:
     DataProvider();
 
+    QString convertDate(QDateTime &date);
+
 private:
     QSqlDatabase _db;
 };
