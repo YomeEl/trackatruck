@@ -17,9 +17,16 @@ SOURCES += \
 
 RESOURCES += qml.qrc
 
-win32:INCLUDEPATH += "C:/Program Files/PostgreSQL/16/include"
+DEFAULT_PGVERSION = 16
+PGVERSION = $$getenv(PGVERSION)
+isEmpty(PGVERSION) {
+    message("PGVERSION not set, using default ($$DEFAULT_PGVERSION)")
+    PGVERSION = $$DEFAULT_PGVERSION
+}
+message("using PostgreSQL $$PGVERSION")
 
-win32:LIBS += "C:/Program Files/PostgreSQL/16/lib/libpq.lib"
+win32:INCLUDEPATH += "C:/Program Files/PostgreSQL/" + $${PGVERSION} + "/include"
+win32:LIBS += "C:/Program Files/PostgreSQL/" + $${PGVERSION} + "/lib/libpq.lib"
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
