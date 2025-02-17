@@ -6,7 +6,7 @@ Rectangle {
     Theme { id: theme }
     height: childrenRect.height
     width: parent.width
-    border.width: 1
+    border.width: isSelected ? 3 : 1
 
     property string route;
     property string driver;
@@ -14,10 +14,11 @@ Rectangle {
     property var colors: [theme.background, theme.warningLow, theme.warningHigh]
     property var accentColors: [theme.accent, theme.warningLowAccent, theme.warningHighAccent]
     property bool useAccent: false
+    property bool isSelected: false
 
     signal selected()
 
-    color: useAccent ? accentColors[warningLevel] : colors[warningLevel]
+    color: (useAccent || isSelected) ? accentColors[warningLevel] : colors[warningLevel]
 
     Column {
         padding: 5

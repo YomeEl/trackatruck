@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 ScrollView {
     id: root
     signal selected(model: var)
+    property int selectedId: -1
 
     function selectWarningLevel(model) {
         const ok = 0
@@ -25,7 +26,8 @@ ScrollView {
                 route: model.fromAddress + " - " + model.toAddress
                 driver: model.driverName
                 warningLevel: selectWarningLevel(model)
-                onSelected: { root.selected(model) }
+                isSelected: model.id === root.selectedId
+                onSelected: { root.selected(model); root.selectedId = model.id }
             }
         }
     }
