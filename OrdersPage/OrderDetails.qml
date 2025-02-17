@@ -1,4 +1,6 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
+
 import '../Theme'
 
 Rectangle {
@@ -61,6 +63,26 @@ Rectangle {
         Text {
             id: value_text
             text: root.model ? 'Объявленная стоимость груза: ' + root.model.value : 'Загрузка...'
+        }
+        Column {
+            id: buttonsRow
+            spacing: 5
+
+            Button {
+                text: 'Сформировать накладную'
+                visible: root.model && root.model.driverName
+            }
+            Button {
+                visible: root.model && root.model.driverName
+                text: 'Отметить как выполненный'
+            }
+            Button {
+                visible: root.model && !root.model.driverName
+                text: 'Назначить водителя и грузовик'
+            }
+            Button {
+                text: 'Отменить'
+            }
         }
     }
 }
