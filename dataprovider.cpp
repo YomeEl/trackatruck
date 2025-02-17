@@ -3,6 +3,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QFile>
+#include <QVector>
 
 DataProvider *DataProvider::Instance()
 {
@@ -13,15 +14,13 @@ DataProvider *DataProvider::Instance()
 
 QVector<Driver> DataProvider::getDrivers(const QString &condition)
 {
-    const QString queryStr = "select name, contract_date from drivers " + condition;
+    const QString queryStr = "select id, name, contract_date from drivers " + condition;
     QVector<Driver> vec;
 
     _db.open();
-    QSqlQuery query(queryStr);
+    QSqlQuery query(queryStr, _db);
     while (query.next()) {
-        QString name = query.value(0).toString();
-        QDateTime contractDate = query.value(1).toDateTime();
-        vec.append({ name, contractDate });
+        vec.append(parseDriver(query));
     }
     _db.close();
 
@@ -30,17 +29,13 @@ QVector<Driver> DataProvider::getDrivers(const QString &condition)
 
 QVector<Truck> DataProvider::getTrucks(const QString &condition)
 {
-    const QString queryStr = "select model, number, last_mileage, last_maintanance_date from drivers " + condition;
+    const QString queryStr = "select id, model, number, last_mileage, last_maintanance_date from drivers " + condition;
     QVector<Truck> vec;
 
     _db.open();
-    QSqlQuery query(queryStr);
+    QSqlQuery query(queryStr, _db);
     while (query.next()) {
-        QString model = query.value(0).toString();
-        QString number = query.value(1).toString();
-        float lastMileage = query.value(2).toFloat();
-        QDateTime lastMaintananceDate = query.value(3).toDateTime();
-        vec.append({ model, number, lastMileage, lastMaintananceDate });
+        vec.append(parseTruck(query));
     }
     _db.close();
 
@@ -49,15 +44,13 @@ QVector<Truck> DataProvider::getTrucks(const QString &condition)
 
 QVector<Client> DataProvider::getClients(const QString &condition)
 {
-    const QString queryStr = "select name, address from clients " + condition;
+    const QString queryStr = "select id, name, address from clients " + condition;
     QVector<Client> vec;
 
     _db.open();
-    QSqlQuery query(queryStr);
+    QSqlQuery query(queryStr, _db);
     while (query.next()) {
-        QString name = query.value(0).toString();
-        QString address = query.value(1).toString();
-        vec.append({ name, address });
+        vec.append(parseClient(query));
     }
     _db.close();
 
@@ -66,17 +59,18 @@ QVector<Client> DataProvider::getClients(const QString &condition)
 
 QVector<Refueling> DataProvider::getRefuelings(const QString &condition)
 {
-    const QString queryStr = "select name, contract_date, date, cost from refuelings join drivers on driver_id = drivers.id " + condition;
+    const QString queryStr =
+        QString("select ") +
+        QString("   refuelings.id, name, contract_date, date, cost ") +
+        QString("from refuelings ") +
+        QString("join drivers on driver_id = drivers.id ") +
+        condition;
     QVector<Refueling> vec;
 
     _db.open();
-    QSqlQuery query(queryStr);
+    QSqlQuery query(queryStr, _db);
     while (query.next()) {
-        QString driverName = query.value(0).toString();
-        QDateTime driverContractDate = query.value(1).toDateTime();
-        QDateTime date = query.value(2).toDateTime();
-        float cost = query.value(3).toFloat();
-        vec.append({ driverName, driverContractDate, date, cost });
+        vec.append(parseRefueling(query));
     }
     _db.close();
 
@@ -87,7 +81,7 @@ QVector<Order> DataProvider::getOrders(const QString &condition)
 {
     const QString queryStr =
         QString("select  ") +
-        QString("	drivers.name, drivers.contract_date,  ") +
+        QString("	orders.id, drivers.name, drivers.contract_date, ") +
         QString("	trucks.model, trucks.number, trucks.last_milage, trucks.last_maintanance_date, ") +
         QString("	src.name, src.address,  ") +
         QString("	dst.name, dst.address, ") +
@@ -101,58 +95,38 @@ QVector<Order> DataProvider::getOrders(const QString &condition)
     QVector<Order> vec;
 
     _db.open();
-    QSqlQuery query(queryStr);
+    QSqlQuery query(queryStr, _db);
     while (query.next()) {
-        // driver
-        QString driverName = query.value(0).toString();
-        QDateTime driverContractDate = query.value(1).toDateTime();
-        // truck
-        QString truckModel = query.value(2).toString();
-        QString truckNumber = query.value(3).toString();
-        float truckLastMileage = query.value(4).toFloat();
-        QDateTime truckLastMaintananceDate = query.value(5).toDateTime();
-        // from
-        QString fromName = query.value(6).toString();
-        QString fromAddress = query.value(7).toString();
-        // to
-        QString toName = query.value(8).toString();
-        QString toAddress = query.value(9).toString();
-        // order
-        QDateTime createdAt = query.value(10).toDateTime();
-        QString createdAtString = convertDate(createdAt);
-        QDateTime sentAt = query.value(11).toDateTime();
-        QString sentAtString = convertDate(sentAt);
-        QDateTime receivedAt = query.value(12).toDateTime();
-        QString receivedAtString = convertDate(receivedAt);
-        bool finished = query.value(13).toBool();
-        float distance = query.value(14).toFloat();
-        QString description = query.value(15).toString();
-
-        QString valueStr = query.value(16).toString();
-        valueStr.remove(QRegExp("[^0-9,]"));
-        valueStr.replace(',', '.');
-        double value = valueStr.toDouble();
-
-        vec.append({
-            driverName, driverContractDate,
-            truckModel, truckNumber, truckLastMileage, truckLastMaintananceDate,
-            fromName, fromAddress,
-            toName, toAddress,
-            createdAt, createdAtString,
-            sentAt, sentAtString,
-            receivedAt, receivedAtString,
-            finished, distance, description, value
-        });
+        vec.append(parseOrder(query));
     }
     _db.close();
 
     return vec;
 }
 
-OrdersList *DataProvider::getOrdersList()
+DriversList *DataProvider::getDriversList()
 {
-    OrdersList *list = new OrdersList(getOrders());
-    return list;
+    return &_drivers;
+}
+
+TrucksList *DataProvider::getTrucksList()
+{
+    return &_trucks;
+}
+
+ClientsList *DataProvider::getClientsList()
+{
+    return &_clients;
+}
+
+RefuelingsList *DataProvider::getRefuelingsList()
+{
+    return &_refuelings;
+}
+
+OrdersList* DataProvider::getOrdersList()
+{
+    return &_orders;
 }
 
 DataProvider::DataProvider()
@@ -191,10 +165,114 @@ DataProvider::DataProvider()
     _db.setDatabaseName("trackatruck");
     _db.setUserName(username);
     _db.setPassword(password);
+
+    update();
+
+    connect(&_updateTimer, &QTimer::timeout, this, &DataProvider::update);
+    _updateTimer.setInterval(kUpdateInterval);
+    _updateTimer.setSingleShot(false);
+    _updateTimer.start();
 }
 
-QString DataProvider::convertDate(QDateTime &date)
+void DataProvider::update()
+{
+    _drivers.clear();
+    _trucks.clear();
+    _clients.clear();
+    _refuelings.clear();
+    _orders.clear();
+
+    _drivers.append(getDrivers());
+    _trucks.append(getTrucks());
+    _clients.append(getClients());
+    _refuelings.append(getRefuelings());
+    _orders.append(getOrders());
+}
+
+QString DataProvider::convertDate(const QDateTime &date) const
 {
     if (!date.isValid() || date.isNull()) return "-";
     return date.toString("dd.MM.yyyy hh:mm:ss");
+}
+
+Driver DataProvider::parseDriver(const QSqlQuery &query) const
+{
+    int id = query.value(0).toInt();
+    QString name = query.value(0).toString();
+    QDateTime contractDate = query.value(1).toDateTime();
+    return { id, name, contractDate };
+}
+
+Truck DataProvider::parseTruck(const QSqlQuery &query) const
+{
+    int id = query.value(0).toInt();
+    QString model = query.value(1).toString();
+    QString number = query.value(2).toString();
+    float lastMileage = query.value(3).toFloat();
+    QDateTime lastMaintananceDate = query.value(4).toDateTime();
+    return { id, model, number, lastMileage, lastMaintananceDate };
+}
+
+Client DataProvider::parseClient(const QSqlQuery &query) const
+{
+    int id = query.value(0).toInt();
+    QString name = query.value(1).toString();
+    QString address = query.value(2).toString();
+    return { id, name, address };
+}
+
+Refueling DataProvider::parseRefueling(const QSqlQuery &query) const
+{
+    int id = query.value(0).toInt();
+    QString driverName = query.value(1).toString();
+    QDateTime driverContractDate = query.value(2).toDateTime();
+    QDateTime date = query.value(3).toDateTime();
+    float cost = query.value(4).toFloat();
+    return { id, driverName, driverContractDate, date, cost };
+}
+
+Order DataProvider::parseOrder(const QSqlQuery &query) const
+{
+    int id = query.value(0).toInt();
+    // driver
+    QString driverName = query.value(1).toString();
+    QDateTime driverContractDate = query.value(2).toDateTime();
+    // truck
+    QString truckModel = query.value(3).toString();
+    QString truckNumber = query.value(4).toString();
+    float truckLastMileage = query.value(5).toFloat();
+    QDateTime truckLastMaintananceDate = query.value(6).toDateTime();
+    // from
+    QString fromName = query.value(7).toString();
+    QString fromAddress = query.value(8).toString();
+    // to
+    QString toName = query.value(9).toString();
+    QString toAddress = query.value(10).toString();
+    // order
+    QDateTime createdAt = query.value(11).toDateTime();
+    QString createdAtString = convertDate(createdAt);
+    QDateTime sentAt = query.value(12).toDateTime();
+    QString sentAtString = convertDate(sentAt);
+    QDateTime receivedAt = query.value(13).toDateTime();
+    QString receivedAtString = convertDate(receivedAt);
+    bool finished = query.value(14).toBool();
+    float distance = query.value(15).toFloat();
+    QString description = query.value(16).toString();
+
+    QString valueStr = query.value(17).toString();
+    valueStr.remove(QRegExp("[^0-9,]"));
+    valueStr.replace(',', '.');
+    double value = valueStr.toDouble();
+
+    return {
+        id,
+        driverName, driverContractDate,
+        truckModel, truckNumber, truckLastMileage, truckLastMaintananceDate,
+        fromName, fromAddress,
+        toName, toAddress,
+        createdAt, createdAtString,
+        sentAt, sentAtString,
+        receivedAt, receivedAtString,
+        finished, distance, description, value
+    };
 }

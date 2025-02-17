@@ -4,23 +4,24 @@
 #define CLIENTSLIST_H
 
 #include <QAbstractListModel>
-#include <QObject>
 #include <QVector>
 
 #include "..\types.h"
 
 class ClientsList : public QAbstractListModel
 {
-	Q_OBJECT
 public:
 	ClientsList() {}
 	ClientsList(const QVector<Client>& list);
-	void append(const Client& item);
+    void append(const Client& item, bool supressUpdate = false);
+    void append(const QVector<Client>& list);
+    void clear();
 
 public:
 	enum roles
 	{
-		NameRole = Qt::UserRole + 1,
+        IdRole = Qt::UserRole + 1,
+        NameRole,
 		AddressRole
 	};
 

@@ -7,6 +7,7 @@
 
 struct Truck
 {
+    int id;
     QString model;
     QString number;
     float lastMileage;
@@ -16,6 +17,7 @@ Q_DECLARE_METATYPE(Truck)
 
 struct Driver
 {
+    int id;
     QString name;
     QDateTime contractDate;
 };
@@ -23,6 +25,7 @@ Q_DECLARE_METATYPE(Driver)
 
 struct Client
 {
+    int id;
     QString name;
     QString address;
 };
@@ -30,6 +33,7 @@ Q_DECLARE_METATYPE(Client)
 
 struct Refueling
 {
+    int id;
     QString driverName;
     QDateTime driverContractDate;
     QDateTime date;
@@ -39,6 +43,7 @@ Q_DECLARE_METATYPE(Refueling)
 
 struct Order
 {
+    int id;
     QString driverName;
     QDateTime driverContractDate;
 

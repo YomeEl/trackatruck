@@ -4,23 +4,24 @@
 #define DRIVERSLIST_H
 
 #include <QAbstractListModel>
-#include <QObject>
 #include <QVector>
 
 #include "..\types.h"
 
 class DriversList : public QAbstractListModel
 {
-	Q_OBJECT
 public:
 	DriversList() {}
 	DriversList(const QVector<Driver>& list);
-	void append(const Driver& item);
+    void append(const Driver& item, bool supressUpdate = false);
+    void append(const QVector<Driver>& list);
+    void clear();
 
 public:
 	enum roles
 	{
-		NameRole = Qt::UserRole + 1,
+        IdRole = Qt::UserRole + 1,
+        NameRole,
 		ContractDateRole
 	};
 

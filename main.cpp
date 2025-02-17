@@ -4,12 +4,8 @@
 
 #include "dataprovider.h"
 #include "lists/orderslist.h"
-#include "types.h"
 
 #include <QObject>
-#include <QtSql/QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
 
 int main(int argc, char *argv[])
 {

@@ -4,23 +4,24 @@
 #define TRUCKSLIST_H
 
 #include <QAbstractListModel>
-#include <QObject>
 #include <QVector>
 
 #include "..\types.h"
 
 class TrucksList : public QAbstractListModel
 {
-	Q_OBJECT
 public:
 	TrucksList() {}
 	TrucksList(const QVector<Truck>& list);
-	void append(const Truck& item);
+    void append(const Truck& item, bool supressUpdate = false);
+    void append(const QVector<Truck>& list);
+    void clear();
 
 public:
 	enum roles
 	{
-		ModelRole = Qt::UserRole + 1,
+        IdRole = Qt::UserRole + 1,
+        ModelRole,
 		NumberRole,
 		LastMileageRole,
 		LastMaintananceDateRole

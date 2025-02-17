@@ -4,23 +4,25 @@
 #define ORDERSLIST_H
 
 #include <QAbstractListModel>
-#include <QObject>
 #include <QVector>
 
 #include "..\types.h"
 
 class OrdersList : public QAbstractListModel
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
 	OrdersList() {}
 	OrdersList(const QVector<Order>& list);
-	void append(const Order& item);
+    void append(const Order& item, bool supressUpdate = false);
+    void append(const QVector<Order>& list);
+    void clear();
 
 public:
 	enum roles
 	{
-		DriverNameRole = Qt::UserRole + 1,
+        IdRole = Qt::UserRole + 1,
+        DriverNameRole,
 		DriverContractDateRole,
 		TruckModelRole,
 		TruckNumberRole,

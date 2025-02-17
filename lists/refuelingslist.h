@@ -4,23 +4,24 @@
 #define REFUELINGSLIST_H
 
 #include <QAbstractListModel>
-#include <QObject>
 #include <QVector>
 
 #include "..\types.h"
 
 class RefuelingsList : public QAbstractListModel
 {
-	Q_OBJECT
 public:
 	RefuelingsList() {}
 	RefuelingsList(const QVector<Refueling>& list);
-	void append(const Refueling& item);
+    void append(const Refueling& item, bool supressUpdate = false);
+    void append(const QVector<Refueling>& list);
+    void clear();
 
 public:
 	enum roles
 	{
-		DriverNameRole = Qt::UserRole + 1,
+        IdRole = Qt::UserRole + 1,
+        DriverNameRole,
 		DriverContractDateRole,
 		DateRole,
 		CostRole
