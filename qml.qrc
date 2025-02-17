@@ -8,5 +8,6 @@
         <file>Theme/Theme.qml</file>
         <file>Theme/qmldir</file>
         <file>OrdersPage/OrderDetails.qml</file>
+        <file>Report.qml</file>
     </qresource>
 </RCC>

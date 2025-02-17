@@ -34,4 +34,9 @@ ApplicationWindow {
     OrdersPage {
 
     }
+
+    Report {
+        visible: true
+        number: 1
+    }
 }
