@@ -65,7 +65,7 @@ Rectangle {
             text: root.model ? 'Объявленная стоимость груза: ' + root.model.value : 'Загрузка...'
         }
         Column {
-            id: buttonsRow
+            id: buttonsColumn
             spacing: 5
 
             Button {
