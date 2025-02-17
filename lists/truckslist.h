@@ -11,7 +11,7 @@
 class TrucksList : public QAbstractListModel
 {
 public:
-	TrucksList() {}
+    TrucksList(QObject *parent = nullptr) : QAbstractListModel(parent){}
 	TrucksList(const QVector<Truck>& list);
     void append(const Truck& item, bool supressUpdate = false);
     void append(const QVector<Truck>& list);

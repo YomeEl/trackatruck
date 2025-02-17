@@ -11,7 +11,7 @@
 class ClientsList : public QAbstractListModel
 {
 public:
-	ClientsList() {}
+    ClientsList(QObject *parent = nullptr) : QAbstractListModel(parent) {}
 	ClientsList(const QVector<Client>& list);
     void append(const Client& item, bool supressUpdate = false);
     void append(const QVector<Client>& list);

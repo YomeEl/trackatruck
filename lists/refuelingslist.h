@@ -11,7 +11,7 @@
 class RefuelingsList : public QAbstractListModel
 {
 public:
-	RefuelingsList() {}
+    RefuelingsList(QObject *parent = nullptr) : QAbstractListModel(parent) {}
 	RefuelingsList(const QVector<Refueling>& list);
     void append(const Refueling& item, bool supressUpdate = false);
     void append(const QVector<Refueling>& list);

@@ -12,7 +12,7 @@ class OrdersList : public QAbstractListModel
 {
     Q_OBJECT
 public:
-	OrdersList() {}
+    OrdersList(QObject *parent = nullptr) : QAbstractListModel(parent) {}
 	OrdersList(const QVector<Order>& list);
     void append(const Order& item, bool supressUpdate = false);
     void append(const QVector<Order>& list);

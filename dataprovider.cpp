@@ -129,7 +129,8 @@ OrdersList* DataProvider::getOrdersList()
     return &_orders;
 }
 
-DataProvider::DataProvider()
+DataProvider::DataProvider() :
+    _drivers(this), _trucks(this), _clients(this), _refuelings(this), _orders(this)
 {
     QString username = "";
     QString password = "";

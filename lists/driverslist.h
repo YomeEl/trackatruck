@@ -11,7 +11,7 @@
 class DriversList : public QAbstractListModel
 {
 public:
-	DriversList() {}
+    DriversList(QObject *parent = nullptr) : QAbstractListModel(parent) {}
 	DriversList(const QVector<Driver>& list);
     void append(const Driver& item, bool supressUpdate = false);
     void append(const QVector<Driver>& list);
