@@ -104,22 +104,22 @@ QVector<Order> DataProvider::getOrders(const QString &condition)
     return vec;
 }
 
-DriversList *DataProvider::getDriversList()
+DriversList* DataProvider::getDriversList()
 {
     return &_drivers;
 }
 
-TrucksList *DataProvider::getTrucksList()
+TrucksList* DataProvider::getTrucksList()
 {
     return &_trucks;
 }
 
-ClientsList *DataProvider::getClientsList()
+ClientsList* DataProvider::getClientsList()
 {
     return &_clients;
 }
 
-RefuelingsList *DataProvider::getRefuelingsList()
+RefuelingsList* DataProvider::getRefuelingsList()
 {
     return &_refuelings;
 }
@@ -127,6 +127,24 @@ RefuelingsList *DataProvider::getRefuelingsList()
 OrdersList* DataProvider::getOrdersList()
 {
     return &_orders;
+}
+
+#define str(s) "'" + s + "'"
+#define tostr(n) QString::number(n)
+#define join + ", " +
+#include <QDebug>
+#include <QSqlError>
+void DataProvider::addOrder(int fromId, int toId, double distance, QString description, double value)
+{
+    const QString queryStr =
+        QString("insert into orders (from_id, to_id, distance, description, declared_value, created_at) values (") +
+        tostr(fromId) join tostr(toId) join
+        tostr(distance) join str(description) join tostr(value) join
+        str(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")) + ")";
+    _db.open();
+    QSqlQuery q(queryStr, _db);
+    qDebug() << q.lastQuery() << "\n" << q.lastError();
+    _db.close();
 }
 
 DataProvider::DataProvider() :
@@ -181,13 +199,15 @@ void DataProvider::update()
     _trucks.clear();
     _clients.clear();
     _refuelings.clear();
-    _orders.clear();
+    //_orders.clear();
 
     _drivers.append(getDrivers());
     _trucks.append(getTrucks());
     _clients.append(getClients());
     _refuelings.append(getRefuelings());
-    _orders.append(getOrders());
+    //_orders.append(getOrders());
+
+    _orders.update(getOrders());
 }
 
 QString DataProvider::convertDate(const QDateTime &date) const

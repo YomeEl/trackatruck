@@ -10,6 +10,7 @@
 
 class RefuelingsList : public QAbstractListModel
 {
+    Q_OBJECT
 public:
     RefuelingsList(QObject *parent = nullptr) : QAbstractListModel(parent) {}
 	RefuelingsList(const QVector<Refueling>& list);

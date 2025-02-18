@@ -36,7 +36,11 @@ ApplicationWindow {
     }
 
     Report {
-        visible: true
+        visible: false
         number: 1
+    }
+
+    NewOrder {
+        visible: true
     }
 }

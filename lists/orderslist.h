@@ -18,6 +18,8 @@ public:
     void append(const QVector<Order>& list);
     void clear();
 
+    void update(const QVector<Order>& list);
+
 public:
 	enum roles
 	{

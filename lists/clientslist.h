@@ -10,6 +10,7 @@
 
 class ClientsList : public QAbstractListModel
 {
+    Q_OBJECT
 public:
     ClientsList(QObject *parent = nullptr) : QAbstractListModel(parent) {}
 	ClientsList(const QVector<Client>& list);
@@ -22,7 +23,8 @@ public:
 	{
         IdRole = Qt::UserRole + 1,
         NameRole,
-		AddressRole
+        AddressRole,
+        SummaryRole
 	};
 
 	int rowCount(const QModelIndex &parent) const { Q_UNUSED(parent); return _clients.count(); }

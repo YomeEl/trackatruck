@@ -1,5 +1,7 @@
 #include "orderslist.h"
 
+#include <QSet>
+
 OrdersList::OrdersList(const QVector<Order>& list)
 {
     append(list);
@@ -26,6 +28,65 @@ void OrdersList::append(const QVector<Order> &list)
 void OrdersList::clear()
 {
     _orders.clear();
+}
+#include <QDebug>
+void OrdersList::update(const QVector<Order> &list)
+{
+    QSet<int> currentIds, newIds, toInsert, toDelete, toUpdate;
+    for (const auto &o : _orders) currentIds.insert(o.id);
+    for (const auto &o : list) newIds.insert(o.id);
+
+    qDebug() << currentIds << newIds;
+
+    toInsert = QSet<int>(newIds).subtract(currentIds);
+    toDelete = QSet<int>(currentIds).subtract(newIds);
+    toUpdate = newIds.intersect(currentIds);
+
+    qDebug() << toInsert << toDelete << toUpdate;
+
+    // insert
+    if (toInsert.count() > 0)
+        beginInsertRows(QModelIndex(), _orders.count(), _orders.count() + toInsert.count() - 1);
+    for (const auto &o : list)
+        if (toInsert.contains(o.id))
+        {
+            qDebug() << "insert";
+            _orders.append(o);
+        }
+    if (toInsert.count() > 0)
+        endInsertRows();
+
+    // remove
+    QVector<size_t> indicesToRemove;
+    for (int i = 0, cnt = 0; i < _orders.count(); i++)
+        if (toDelete.contains(_orders[i].id))
+        {
+            indicesToRemove.append(i - cnt++);
+        }
+
+    for (const int idx : indicesToRemove)
+    {
+        beginRemoveRows(QModelIndex(), idx, idx + 1);
+        _orders.removeAt(idx);
+        endRemoveRows();
+    }
+
+    // update
+    QMap<size_t, size_t> indicesToUpdate;
+    for (const int id : qAsConst(toUpdate))
+    {
+        size_t currentIdx = -1, newIdx = -1;
+        for (int i = 0; i < _orders.count(); i++) if (_orders[i].id == id) currentIdx = i;
+        for (int i = 0; i < list.count(); i++) if (list[i].id == id) newIdx = i;
+        indicesToUpdate[currentIdx] = newIdx;
+    }
+    for (const size_t &currentIdx : indicesToUpdate.keys())
+    {
+        _orders[currentIdx] = list[indicesToUpdate[currentIdx]];
+        auto startIndex = createIndex(currentIdx, 0);
+        auto endIndex = createIndex(currentIdx, 0);
+        emit dataChanged(startIndex, endIndex);
+    }
 }
 
 QVariant OrdersList::data(const QModelIndex &index, int role) const

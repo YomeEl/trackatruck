@@ -3,6 +3,8 @@ import QtQuick.Controls 2.15
 
 ScrollView {
     id: root
+    clip: true
+
     signal selected(model: var)
     property int selectedId: -1
 

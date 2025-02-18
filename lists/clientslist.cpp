@@ -37,6 +37,8 @@ QVariant ClientsList::data(const QModelIndex &index, int role) const
 		return QVariant::fromValue(_clients[index.row()].name);
 	case roles::AddressRole:
 		return QVariant::fromValue(_clients[index.row()].address);
+    case roles::SummaryRole:
+        return QVariant::fromValue(_clients[index.row()].name + " (" + _clients[index.row()].address + ")");
 	default: return QVariant();
 	}
 }
@@ -48,6 +50,7 @@ QHash<int, QByteArray> ClientsList::roleNames() const
     names[roles::IdRole] = "id";
 	names[roles::NameRole] = "name";
 	names[roles::AddressRole] = "address";
+    names[roles::SummaryRole] = "summary";
 
 	return names;
 }

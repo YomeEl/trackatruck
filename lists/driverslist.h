@@ -10,6 +10,7 @@
 
 class DriversList : public QAbstractListModel
 {
+    Q_OBJECT
 public:
     DriversList(QObject *parent = nullptr) : QAbstractListModel(parent) {}
 	DriversList(const QVector<Driver>& list);

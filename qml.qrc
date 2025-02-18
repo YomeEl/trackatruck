@@ -9,5 +9,6 @@
         <file>Theme/qmldir</file>
         <file>OrdersPage/OrderDetails.qml</file>
         <file>Report.qml</file>
+        <file>NewOrder.qml</file>
     </qresource>
 </RCC>

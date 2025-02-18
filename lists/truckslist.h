@@ -10,6 +10,7 @@
 
 class TrucksList : public QAbstractListModel
 {
+    Q_OBJECT
 public:
     TrucksList(QObject *parent = nullptr) : QAbstractListModel(parent){}
 	TrucksList(const QVector<Truck>& list);
