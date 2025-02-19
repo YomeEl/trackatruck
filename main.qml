@@ -12,7 +12,10 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             title: qsTr("Новый")
-            Action { text: qsTr("Заказ") }
+            Action {
+                text: qsTr("Заказ")
+                onTriggered: newOrderWindow.show()
+            }
             Action { text: qsTr("Водитель") }
             Action { text: qsTr("Грузовик") }
         }
@@ -41,6 +44,6 @@ ApplicationWindow {
     }
 
     NewOrder {
-        visible: true
+        id: newOrderWindow
     }
 }

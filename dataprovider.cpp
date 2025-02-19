@@ -5,6 +5,10 @@
 #include <QFile>
 #include <QVector>
 
+#define str(s) "'" + s + "'"
+#define tostr(n) QString::number(n)
+#define join + ", " +
+
 DataProvider *DataProvider::Instance()
 {
     static DataProvider *instance = nullptr;
@@ -124,9 +128,6 @@ OrdersList* DataProvider::getOrdersList()
     return &_orders;
 }
 
-#define str(s) "'" + s + "'"
-#define tostr(n) QString::number(n)
-#define join + ", " +
 void DataProvider::addOrder(int fromId, int toId, double distance, QString description, double value)
 {
     const QString queryStr =
@@ -136,10 +137,15 @@ void DataProvider::addOrder(int fromId, int toId, double distance, QString descr
         str(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")) + ")";
 
     QSqlQuery(queryStr, _db);
+    update();
 }
-#undef str
-#undef tostr
-#undef join
+
+void DataProvider::cancelOrder(int orderId)
+{
+    const QString queryStr = QString("delete from orders where id = ") + QString::number(orderId);
+    QSqlQuery(queryStr, _db);
+    update();
+}
 
 DataProvider::DataProvider() :
     _drivers(this), _trucks(this), _clients(this), _refuelings(this), _orders(this)
@@ -288,3 +294,7 @@ Order DataProvider::parseOrder(const QSqlQuery &query) const
 
     return o;
 }
+
+#undef str
+#undef tostr
+#undef join

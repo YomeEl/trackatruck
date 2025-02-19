@@ -48,7 +48,7 @@ public:
     Q_INVOKABLE void addOrder(int fromId, int toId, double distance, QString description, double value);
     Q_INVOKABLE void assignTruckAndDriver(int orderId, int driverId, int truckId, QDateTime finishedAt) {}
     Q_INVOKABLE void markAsFinished(int orderId) {}
-    Q_INVOKABLE void cancelOrder(int orderId) {}
+    Q_INVOKABLE void cancelOrder(int orderId);
 
 private:
     DataProvider();

@@ -102,7 +102,9 @@ Rectangle {
                 text: 'Назначить водителя и грузовик'
             }
             Button {
+                visible: root.model && !root.model.finished
                 text: 'Отменить'
+                onClicked: DataProvider.cancelOrder(root.model.id)
             }
         }
     }
