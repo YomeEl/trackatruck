@@ -7,6 +7,7 @@ QT += sql
 
 SOURCES += \
         dataprovider.cpp \
+        lists/abstractdatabaselist.cpp \
         lists/clientslist.cpp \
         lists/driverslist.cpp \
         lists/orderslist.cpp \
@@ -41,6 +42,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     dataprovider.h \
+    lists/abstractdatabaselist.h \
     lists/clientslist.h \
     lists/driverslist.h \
     lists/orderslist.h \

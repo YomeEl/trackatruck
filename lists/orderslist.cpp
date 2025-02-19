@@ -2,139 +2,57 @@
 
 #include <QSet>
 
-OrdersList::OrdersList(const QVector<Order>& list)
-{
-    append(list);
-}
-
-void OrdersList::append(const Order& item, bool supressUpdate)
-{
-	_orders.append(item);
-
-    if (supressUpdate) return;
-
-    auto idx = createIndex(_orders.count() - 1, 0);
-    emit dataChanged(idx, idx);
-}
-
-void OrdersList::append(const QVector<Order> &list)
-{
-    auto startIndex = createIndex(_orders.count(), 0);
-    for (auto &item : list) append(item, true);
-    auto endIndex = createIndex(_orders.count(), 0);
-    emit dataChanged(startIndex, endIndex);
-}
-
-void OrdersList::clear()
-{
-    _orders.clear();
-}
-#include <QDebug>
-void OrdersList::update(const QVector<Order> &list)
-{
-    QSet<int> currentIds, newIds, toInsert, toDelete, toUpdate;
-    for (const auto &o : _orders) currentIds.insert(o.id);
-    for (const auto &o : list) newIds.insert(o.id);
-
-    qDebug() << currentIds << newIds;
-
-    toInsert = QSet<int>(newIds).subtract(currentIds);
-    toDelete = QSet<int>(currentIds).subtract(newIds);
-    toUpdate = newIds.intersect(currentIds);
-
-    qDebug() << toInsert << toDelete << toUpdate;
-
-    // insert
-    if (toInsert.count() > 0)
-        beginInsertRows(QModelIndex(), _orders.count(), _orders.count() + toInsert.count() - 1);
-    for (const auto &o : list)
-        if (toInsert.contains(o.id))
-        {
-            qDebug() << "insert";
-            _orders.append(o);
-        }
-    if (toInsert.count() > 0)
-        endInsertRows();
-
-    // remove
-    QVector<size_t> indicesToRemove;
-    for (int i = 0, cnt = 0; i < _orders.count(); i++)
-        if (toDelete.contains(_orders[i].id))
-        {
-            indicesToRemove.append(i - cnt++);
-        }
-
-    for (const int idx : indicesToRemove)
-    {
-        beginRemoveRows(QModelIndex(), idx, idx + 1);
-        _orders.removeAt(idx);
-        endRemoveRows();
-    }
-
-    // update
-    QMap<size_t, size_t> indicesToUpdate;
-    for (const int id : qAsConst(toUpdate))
-    {
-        size_t currentIdx = -1, newIdx = -1;
-        for (int i = 0; i < _orders.count(); i++) if (_orders[i].id == id) currentIdx = i;
-        for (int i = 0; i < list.count(); i++) if (list[i].id == id) newIdx = i;
-        indicesToUpdate[currentIdx] = newIdx;
-    }
-    for (const size_t &currentIdx : indicesToUpdate.keys())
-    {
-        _orders[currentIdx] = list[indicesToUpdate[currentIdx]];
-        auto startIndex = createIndex(currentIdx, 0);
-        auto endIndex = createIndex(currentIdx, 0);
-        emit dataChanged(startIndex, endIndex);
-    }
-}
+OrdersList::OrdersList(QObject *parent) : AbstractDatabaseList(parent) {}
 
 QVariant OrdersList::data(const QModelIndex &index, int role) const
 {
+    const Order &item = _data[index.row()];
+
 	switch (role) {
     case roles::IdRole:
-        return QVariant::fromValue(_orders[index.row()].id);
+        return QVariant::fromValue(item.id);
 	case roles::DriverNameRole:
-		return QVariant::fromValue(_orders[index.row()].driverName);
+        return QVariant::fromValue(item.driverName);
 	case roles::DriverContractDateRole:
-		return QVariant::fromValue(_orders[index.row()].driverContractDate);
+        return QVariant::fromValue(item.driverContractDate);
 	case roles::TruckModelRole:
-		return QVariant::fromValue(_orders[index.row()].truckModel);
+        return QVariant::fromValue(item.truckModel);
 	case roles::TruckNumberRole:
-		return QVariant::fromValue(_orders[index.row()].truckNumber);
+        return QVariant::fromValue(item.truckNumber);
 	case roles::TruckLastMilageRole:
-		return QVariant::fromValue(_orders[index.row()].truckLastMilage);
+        return QVariant::fromValue(item.truckLastMilage);
 	case roles::TruckLastMaintananceDateRole:
-		return QVariant::fromValue(_orders[index.row()].truckLastMaintananceDate);
+        return QVariant::fromValue(item.truckLastMaintananceDate);
 	case roles::FromNameRole:
-		return QVariant::fromValue(_orders[index.row()].fromName);
+        return QVariant::fromValue(item.fromName);
 	case roles::FromAddressRole:
-		return QVariant::fromValue(_orders[index.row()].fromAddress);
+        return QVariant::fromValue(item.fromAddress);
 	case roles::ToNameRole:
-		return QVariant::fromValue(_orders[index.row()].toName);
+        return QVariant::fromValue(item.toName);
 	case roles::ToAddressRole:
-		return QVariant::fromValue(_orders[index.row()].toAddress);
+        return QVariant::fromValue(item.toAddress);
 	case roles::CreatedAtRole:
-		return QVariant::fromValue(_orders[index.row()].createdAt);
+        return QVariant::fromValue(item.createdAt);
     case roles::CreatedAtStringRole:
-        return QVariant::fromValue(_orders[index.row()].createdAtString);
+        return QVariant::fromValue(item.createdAtString);
 	case roles::SentAtRole:
-		return QVariant::fromValue(_orders[index.row()].sentAt);
+        return QVariant::fromValue(item.sentAt);
     case roles::SentAtStringRole:
-        return QVariant::fromValue(_orders[index.row()].sentAtString);
+        return QVariant::fromValue(item.sentAtString);
 	case roles::ReceivedAtRole:
-		return QVariant::fromValue(_orders[index.row()].receivedAt);
+        return QVariant::fromValue(item.receivedAt);
     case roles::ReceivedAtStringRole:
-        return QVariant::fromValue(_orders[index.row()].receivedAtString);
+        return QVariant::fromValue(item.receivedAtString);
 	case roles::FinishedRole:
-		return QVariant::fromValue(_orders[index.row()].finished);
+        return QVariant::fromValue(item.finished);
 	case roles::DistanceRole:
-		return QVariant::fromValue(_orders[index.row()].distance);
+        return QVariant::fromValue(item.distance);
 	case roles::DescriptionRole:
-		return QVariant::fromValue(_orders[index.row()].description);
+        return QVariant::fromValue(item.description);
 	case roles::ValueRole:
-		return QVariant::fromValue(_orders[index.row()].value);
-	default: return QVariant();
+        return QVariant::fromValue(item.value);
+    default:
+        return QVariant();
 	}
 }
 

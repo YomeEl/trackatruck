@@ -1,47 +1,22 @@
 #include "truckslist.h"
 
-TrucksList::TrucksList(const QVector<Truck>& list)
-{
-    append(list);
-}
-
-void TrucksList::append(const Truck& item, bool supressUpdate)
-{
-	_trucks.append(item);
-
-    if (supressUpdate) return;
-
-    auto idx = createIndex(_trucks.count(), 0);
-    emit dataChanged(idx, idx);
-}
-
-void TrucksList::append(const QVector<Truck> &list)
-{
-    auto startIndex = createIndex(_trucks.count(), 0);
-    for (auto &item : list) append(item, true);
-    auto endIndex = createIndex(_trucks.count(), 0);
-    emit dataChanged(startIndex, endIndex);
-}
-
-void TrucksList::clear()
-{
-    _trucks.clear();
-}
-
 QVariant TrucksList::data(const QModelIndex &index, int role) const
 {
+    const Truck &item = _data[index.row()];
+
 	switch (role) {
     case roles::IdRole:
-        return QVariant::fromValue(_trucks[index.row()].id);
+        return QVariant::fromValue(item.id);
 	case roles::ModelRole:
-		return QVariant::fromValue(_trucks[index.row()].model);
+        return QVariant::fromValue(item.model);
 	case roles::NumberRole:
-		return QVariant::fromValue(_trucks[index.row()].number);
+        return QVariant::fromValue(item.number);
 	case roles::LastMileageRole:
-		return QVariant::fromValue(_trucks[index.row()].lastMileage);
+        return QVariant::fromValue(item.lastMileage);
 	case roles::LastMaintananceDateRole:
-		return QVariant::fromValue(_trucks[index.row()].lastMaintananceDate);
-	default: return QVariant();
+        return QVariant::fromValue(item.lastMaintananceDate);
+    default:
+        return QVariant();
 	}
 }
 

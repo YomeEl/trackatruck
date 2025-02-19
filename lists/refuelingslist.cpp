@@ -1,47 +1,24 @@
 #include "refuelingslist.h"
 
-RefuelingsList::RefuelingsList(const QVector<Refueling>& list)
-{
-    append(list);
-}
-
-void RefuelingsList::append(const Refueling& item, bool supressUpdate)
-{
-	_refuelings.append(item);
-
-    if (supressUpdate) return;
-
-    auto idx = createIndex(_refuelings.count(), 0);
-    emit dataChanged(idx, idx);
-}
-
-void RefuelingsList::append(const QVector<Refueling> &list)
-{
-    auto startIndex = createIndex(_refuelings.count(), 0);
-    for (auto &item : list) append(item, true);
-    auto endIndex = createIndex(_refuelings.count(), 0);
-    emit dataChanged(startIndex, endIndex);
-}
-
-void RefuelingsList::clear()
-{
-    _refuelings.clear();
-}
+RefuelingsList::RefuelingsList(QObject *parent) : AbstractDatabaseList(parent) {}
 
 QVariant RefuelingsList::data(const QModelIndex &index, int role) const
 {
+    const Refueling &item = _data[index.row()];
+
 	switch (role) {
     case roles::IdRole:
-        return QVariant::fromValue(_refuelings[index.row()].id);
+        return QVariant::fromValue(item.id);
 	case roles::DriverNameRole:
-		return QVariant::fromValue(_refuelings[index.row()].driverName);
+        return QVariant::fromValue(item.driverName);
 	case roles::DriverContractDateRole:
-		return QVariant::fromValue(_refuelings[index.row()].driverContractDate);
+        return QVariant::fromValue(item.driverContractDate);
 	case roles::DateRole:
-		return QVariant::fromValue(_refuelings[index.row()].date);
+        return QVariant::fromValue(item.date);
 	case roles::CostRole:
-		return QVariant::fromValue(_refuelings[index.row()].cost);
-	default: return QVariant();
+        return QVariant::fromValue(item.cost);
+    default:
+        return QVariant();
 	}
 }
 

@@ -5,7 +5,13 @@
 #include <QString>
 #include <QDateTime>
 
-struct Truck
+class HasId
+{
+public:
+    virtual int getId() const = 0;
+};
+
+struct Truck : public HasId
 {
     Q_GADGET
 public:
@@ -14,30 +20,36 @@ public:
     QString number;
     float lastMileage;
     QDateTime lastMaintananceDate;
+
+    int getId() const override { return id; }
 };
 Q_DECLARE_METATYPE(Truck)
 
-struct Driver
+struct Driver : public HasId
 {
     Q_GADGET
 public:
     int id;
     QString name;
     QDateTime contractDate;
+
+    int getId() const override { return id; }
 };
 Q_DECLARE_METATYPE(Driver)
 
-struct Client
+struct Client : public HasId
 {
     Q_GADGET
 public:
     int id;
     QString name;
     QString address;
+
+    int getId() const override { return id; }
 };
 Q_DECLARE_METATYPE(Client)
 
-struct Refueling
+struct Refueling : public HasId
 {
     Q_GADGET
 public:
@@ -46,10 +58,12 @@ public:
     QDateTime driverContractDate;
     QDateTime date;
     float cost;
+
+    int getId() const override { return id; }
 };
 Q_DECLARE_METATYPE(Refueling)
 
-struct Order
+struct Order : public HasId
 {
     Q_GADGET
 public:
@@ -77,6 +91,8 @@ public:
     float distance;
     QString description;
     double value;
+
+    int getId() const override { return id; }
 };
 Q_DECLARE_METATYPE(Order)
 

@@ -1,43 +1,20 @@
 #include "driverslist.h"
 
-DriversList::DriversList(const QVector<Driver>& list)
-{
-    append(list);
-}
-
-void DriversList::append(const Driver& item, bool supressUpdate)
-{
-	_drivers.append(item);
-
-    if (supressUpdate) return;
-
-    auto idx = createIndex(_drivers.count(), 0);
-    emit dataChanged(idx, idx);
-}
-
-void DriversList::append(const QVector<Driver> &list)
-{
-    auto startIndex = createIndex(_drivers.count(), 0);
-    for (auto &item : list) append(item, true);
-    auto endIndex = createIndex(_drivers.count(), 0);
-    emit dataChanged(startIndex, endIndex);
-}
-
-void DriversList::clear()
-{
-    _drivers.clear();
-}
+DriversList::DriversList(QObject *parent) : AbstractDatabaseList(parent) {}
 
 QVariant DriversList::data(const QModelIndex &index, int role) const
 {
+    const Driver &item = _data[index.row()];
+
 	switch (role) {
     case roles::IdRole:
-        return QVariant::fromValue(_drivers[index.row()].id);
+        return QVariant::fromValue(item.id);
 	case roles::NameRole:
-		return QVariant::fromValue(_drivers[index.row()].name);
+        return QVariant::fromValue(item.name);
 	case roles::ContractDateRole:
-		return QVariant::fromValue(_drivers[index.row()].contractDate);
-	default: return QVariant();
+        return QVariant::fromValue(item.contractDate);
+    default:
+        return QVariant();
 	}
 }
 
