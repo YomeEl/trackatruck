@@ -12,17 +12,20 @@ DataProvider *DataProvider::Instance()
     return instance;
 }
 
+DataProvider::~DataProvider()
+{
+    _db.close();
+}
+
 QVector<Driver> DataProvider::getDrivers(const QString &condition)
 {
     const QString queryStr = "select id, name, contract_date from drivers " + condition;
     QVector<Driver> vec;
 
-    _db.open();
     QSqlQuery query(queryStr, _db);
     while (query.next()) {
         vec.append(parseDriver(query));
     }
-    _db.close();
 
     return vec;
 }
@@ -32,12 +35,10 @@ QVector<Truck> DataProvider::getTrucks(const QString &condition)
     const QString queryStr = "select id, model, number, last_mileage, last_maintanance_date from drivers " + condition;
     QVector<Truck> vec;
 
-    _db.open();
     QSqlQuery query(queryStr, _db);
     while (query.next()) {
         vec.append(parseTruck(query));
     }
-    _db.close();
 
     return vec;
 }
@@ -47,12 +48,10 @@ QVector<Client> DataProvider::getClients(const QString &condition)
     const QString queryStr = "select id, name, address from clients " + condition;
     QVector<Client> vec;
 
-    _db.open();
     QSqlQuery query(queryStr, _db);
     while (query.next()) {
         vec.append(parseClient(query));
     }
-    _db.close();
 
     return vec;
 }
@@ -67,12 +66,10 @@ QVector<Refueling> DataProvider::getRefuelings(const QString &condition)
         condition;
     QVector<Refueling> vec;
 
-    _db.open();
     QSqlQuery query(queryStr, _db);
     while (query.next()) {
         vec.append(parseRefueling(query));
     }
-    _db.close();
 
     return vec;
 }
@@ -94,12 +91,10 @@ QVector<Order> DataProvider::getOrders(const QString &condition)
         condition;
     QVector<Order> vec;
 
-    _db.open();
     QSqlQuery query(queryStr, _db);
     while (query.next()) {
         vec.append(parseOrder(query));
     }
-    _db.close();
 
     return vec;
 }
@@ -139,9 +134,8 @@ void DataProvider::addOrder(int fromId, int toId, double distance, QString descr
         tostr(fromId) join tostr(toId) join
         tostr(distance) join str(description) join tostr(value) join
         str(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")) + ")";
-    _db.open();
-    QSqlQuery q(queryStr, _db);
-    _db.close();
+
+    QSqlQuery(queryStr, _db);
 }
 #undef str
 #undef tostr
@@ -184,6 +178,7 @@ DataProvider::DataProvider() :
     _db.setDatabaseName("trackatruck");
     _db.setUserName(username);
     _db.setPassword(password);
+    _db.open();
 
     update();
 

@@ -20,6 +20,7 @@ class DataProvider : public QObject
     Q_OBJECT
 public:
     static DataProvider* Instance();
+    virtual ~DataProvider();
 
     QVector<Driver> getDrivers(const QString& condition = "");
     QVector<Truck> getTrucks(const QString& condition = "");
