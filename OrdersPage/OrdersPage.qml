@@ -14,19 +14,12 @@ GridLayout {
 
     Text {
         text: 'Активные заказы'
-        font.pixelSize: 20
+        font.pointSize: 20
         horizontalAlignment: Text.AlignHCenter
         Layout.preferredWidth: parent.width / 3
         Layout.columnSpan: 2
         Layout.fillWidth: true
     }
-
-    //OrdersTable {
-    //    id: table
-    //    onSelected: details.model = model
-    //    Layout.preferredWidth: parent.width / 3
-    //    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-    //}
 
     OrdersTable {
         id: table

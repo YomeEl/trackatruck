@@ -79,8 +79,17 @@ Window {
             TextField {
                 id: declaredValueR
                 text: '0'
-                validator: IntValidator {}
+                validator: IntValidator {
+                    bottom: 0
+                }
                 Layout.fillWidth: true
+
+                onFocusChanged: {
+                    if (declaredValueR.focus && text === '0')
+                        declaredValueR.text = ''
+                    else
+                        declaredValueR.text = Number(declaredValueR.text)
+                }
             }
             Label {
                 text: "руб."
@@ -88,8 +97,18 @@ Window {
             TextField {
                 id: declaredValueK
                 text: '00'
-                validator: IntValidator {}
+                validator: IntValidator {
+                    bottom: 0
+                    top: 99
+                }
                 Layout.fillWidth: true
+
+                onFocusChanged: {
+                    if (declaredValueK.focus && text === '00')
+                        declaredValueK.text = ''
+                    else
+                        declaredValueK.text = declaredValueK.text.padStart(2, '0')
+                }
             }
             Label {
                 text: "коп."

@@ -1,5 +1,6 @@
-function splitWithDots(integer, groupSize = 3) {
-    let num = String(integer)
+function splitWithDots(number, groupSize = 3) {
+    let [integer, decimal] = String(number).split('.')
+    let num = integer
     const zeroes = (groupSize - (num.length % groupSize)) % groupSize
     num = num.padStart(num.length + zeroes, '0')
 
@@ -11,7 +12,9 @@ function splitWithDots(integer, groupSize = 3) {
         let sub = num.substring(from, to)
         groups.push(sub)
     }
-    return groups.join('.')
+
+    const suffix = decimal ? '.' + decimal : ''
+    return groups.join('.') + suffix
 }
 
 function formatMoney(number) {

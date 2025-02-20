@@ -5,7 +5,7 @@ Rectangle {
     id: root
     Theme { id: theme }
     height: childrenRect.height
-    width: parent.width
+    width: parent ? parent.width : 0
     border.width: isSelected ? 3 : 1
 
     property string route;
