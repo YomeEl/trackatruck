@@ -1,20 +1,23 @@
-function formatMoney(number) {
-    const split = String(number).split('.')
-    let integer = split[0]
-    let decimal = split[1] ? split[1] : '00'
+function splitWithDots(integer, groupSize = 3) {
+    let num = String(integer)
+    const zeroes = (groupSize - (num.length % groupSize)) % groupSize
+    num = num.padStart(num.length + zeroes, '0')
 
-    decimal = decimal.padEnd(2, '0')
-
-    const zeroes = (3 - (integer.length % 3)) % 3
-    integer = integer.padStart(integer.length + zeroes, '0')
-
-    let groupsCnt = integer.length / 3
+    let groupsCnt = num.length / groupSize
     let groups = []
     for (let i = 0; i < groupsCnt; i++) {
-        let from = i === 0 ? zeroes : 3 * i
-        let to = 3 * i + 3
-        let sub = integer.substring(from, to)
+        let from = i === 0 ? zeroes : groupSize * i
+        let to = (i + 1) * groupSize
+        let sub = num.substring(from, to)
         groups.push(sub)
     }
-    return groups.join('.') + ' руб. ' + decimal + ' коп.'
+    return groups.join('.')
+}
+
+function formatMoney(number) {
+    const split = String(number.toFixed(2)).split('.')
+    let integer = split[0]
+    let decimal = split[1]
+
+    return splitWithDots(integer) + ' руб. ' + decimal + ' коп.'
 }

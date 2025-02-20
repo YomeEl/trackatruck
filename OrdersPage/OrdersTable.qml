@@ -1,12 +1,14 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
-ScrollView {
-    id: root
-    clip: true
-
-    signal selected(model: var)
+ListView {
+    id: listView
+    spacing: -1
+    model: DataProvider.getOrdersList()
+    cacheBuffer: 200
     property int selectedId: -1
+
+    signal selected(var model)
 
     function selectWarningLevel(model) {
         const ok = 0
@@ -18,19 +20,18 @@ ScrollView {
         return ok
     }
 
-    Column {
-        id: col
-        anchors.fill: parent
-        spacing: -1
-        Repeater {
-            model: DataProvider.getOrdersList()
-            delegate: Order {
-                route: model.fromAddress + " - " + model.toAddress
-                driver: model.driverName
-                warningLevel: selectWarningLevel(model)
-                isSelected: model.id === root.selectedId
-                onSelected: { root.selected(model); root.selectedId = model.id }
-            }
+    ScrollBar.vertical: ScrollBar {
+        active: true
+    }
+
+    delegate: Order {
+        route: model.fromAddress + " - " + model.toAddress
+        driver: model.driverName
+        warningLevel: selectWarningLevel(model)
+        isSelected: model.id === listView.selectedId
+        onSelected: {
+            listView.selectedId = model.id
+            listView.selected(model)
         }
     }
 }

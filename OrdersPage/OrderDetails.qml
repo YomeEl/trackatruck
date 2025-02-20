@@ -57,7 +57,7 @@ Rectangle {
         }
         Text {
             id: distance_text
-            text: root.model ? 'Расстояние: ' + root.model.distance : 'Загрузка...'
+            text: root.model ? 'Расстояние: ' + Helpers.splitWithDots(root.model.distance) + ' км' : 'Загрузка...'
         }
         Text {
             id: description_text

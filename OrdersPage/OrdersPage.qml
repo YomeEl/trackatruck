@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 GridLayout {
@@ -20,11 +21,18 @@ GridLayout {
         Layout.fillWidth: true
     }
 
+    //OrdersTable {
+    //    id: table
+    //    onSelected: details.model = model
+    //    Layout.preferredWidth: parent.width / 3
+    //    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+    //}
+
     OrdersTable {
         id: table
+        Layout.fillWidth: true
+        Layout.fillHeight: true
         onSelected: details.model = model
-        Layout.preferredWidth: parent.width / 3
-        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
     }
 
     OrderDetails {
