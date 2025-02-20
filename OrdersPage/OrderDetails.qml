@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 import '../Theme'
+import '../helpers.js' as Helpers
 
 Rectangle {
     Theme { id: theme }
@@ -10,29 +11,10 @@ Rectangle {
 
     property var model: null;
 
+    signal generateReport(var order)
+
     height: childrenRect.height
     width: childrenRect.width
-
-    function formatMoney(number) {
-        const split = String(number).split('.')
-        let integer = split[0]
-        let decimal = split[1] ? split[1] : '00'
-
-        decimal = decimal.padEnd(2, '0')
-
-        const zeroes = (3 - (integer.length % 3)) % 3
-        integer = integer.padStart(integer.length + zeroes, '0')
-
-        let groupsCnt = integer.length / 3
-        let groups = []
-        for (let i = 0; i < groupsCnt; i++) {
-            let from = i === 0 ? zeroes : 3 * i
-            let to = 3 * i + 3
-            let sub = integer.substring(from, to)
-            groups.push(sub)
-        }
-        return groups.join('.') + ' руб. ' + decimal + ' коп.'
-    }
 
     Column {
         spacing: 5
@@ -83,7 +65,7 @@ Rectangle {
         }
         Text {
             id: value_text
-            text: root.model ? 'Объявленная стоимость груза: ' + formatMoney(root.model.value) : 'Загрузка...'
+            text: root.model ? 'Объявленная стоимость груза: ' + Helpers.formatMoney(root.model.value) : 'Загрузка...'
         }
         Column {
             id: buttonsColumn
@@ -92,6 +74,7 @@ Rectangle {
             Button {
                 text: 'Сформировать накладную'
                 visible: root.model && root.model.driverName
+                onClicked: generateReport(root.model)
             }
             Button {
                 visible: root.model && root.model.driverName

@@ -2,10 +2,14 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 
 GridLayout {
+    id: root
+
     anchors.fill: parent
     columns: 2
     columnSpacing: 0
     rowSpacing: 0
+
+    signal generateReport(var order)
 
     Text {
         text: 'Активные заказы'
@@ -27,5 +31,6 @@ GridLayout {
         id: details
         Layout.preferredWidth: 2 * parent.width / 3
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+        onGenerateReport: root.generateReport(order)
     }
 }

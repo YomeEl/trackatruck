@@ -14,6 +14,9 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
+    QCoreApplication::setOrganizationName("kek");
+    QCoreApplication::setOrganizationDomain("kek.kek");
+
     qmlRegisterType<ClientsList>("types", 1, 0, "ClientsList");
     qmlRegisterType<DriversList>("types", 1, 0, "DriversList");
     qmlRegisterType<RefuelingsList>("types", 1, 0, "RefuelingsList");

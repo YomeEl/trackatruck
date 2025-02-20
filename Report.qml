@@ -1,27 +1,27 @@
 import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Dialogs 1.3
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 ApplicationWindow {
     id: root
     visible: true
-    width: 595   // A4 width in points
-    height: 842  // A4 height in points
-    title: "Накладная"
+
+    readonly property int a4width: 210  // A4 width in mm
+    readonly property int a4height: 297 // A4 height in mm
+
+    property int windowMargin: 50
+
+    property double scale: (Screen.desktopAvailableHeight - windowMargin) / a4height
+    width: scale * a4width
+    height: scale * a4height
+    x: 0
+    y: 0
 
     property int number: 0
-    property var tableData: [
-        { key: 'row 1', value: 'val 1' },
-        { key: 'row 2', value: 'val 2' },
-        { key: 'row 3', value: 'val 3' },
-        { key: 'row 4', value: 'val 4'.repeat(30) },
-        { key: 'row 5', value: 'val 5' },
-    ]
-    property var signatures: [
-        { title: 'Отправил', fields: ['ФИО', 'должность', 'подпись', 'дата'] },
-        { title: 'Получил', fields: ['ФИО', 'должность', 'подпись', 'дата'] },
-        { title: 'Водитель', fields: ['ФИО', 'подпись', 'дата'] }
-    ]
+    property var tableData: []
+    property var signatures: []
 
     function getDateString() {
         let date = new Date
@@ -34,28 +34,45 @@ ApplicationWindow {
         return [d, m, y].join('.') + ' в ' + [hrs, min].join(':')
     }
 
+    FileDialog {
+        id: saveFileDialog
+        title: 'Сохранение отчёта'
+        selectExisting: false
+        defaultSuffix: 'png'
+        folder: shortcuts.desktop
+        nameFilters: ['Изображение (*.png)']
+        onAccepted: {
+            var str = saveFileDialog.fileUrl.toString()
+            var path = saveFileDialog.fileUrl.toString().substring(8, str.length)
+            docRoot.grabToImage(function(result) {
+                result.saveToFile(saveFileDialog.fileUrl.toString().substring(8, str.length));
+            });
+        }
+    }
+
+    // Документ
     Rectangle {
+        id: docRoot
         width: parent.width
         height: parent.height
         color: "white"
-        border.color: "black"
 
         // Заголовок
         Text {
             text: root.title + ' №' + root.number
-            font.pointSize: 24
+            font.pointSize: Math.round(root.scale * 9.6)
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: 20
+            anchors.topMargin: root.scale * 8
         }
 
         // Таблица
         Column {
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.topMargin: 80
-            anchors.leftMargin: 20
-            width: parent.width - 40
+            anchors.topMargin: root.scale * 32
+            anchors.leftMargin: root.scale * 8
+            width: parent.width - root.scale * 16
             spacing: -1
 
             Repeater {
@@ -64,24 +81,26 @@ ApplicationWindow {
                     spacing: -1
                     width: parent.width
                     Rectangle {
-                        width: parent.width / 2 - 10
-                        height: Math.max(40, txt.height + 10)
+                        width: parent.width / 2 - root.scale * 4
+                        height: txt.height + root.scale * 4.8
                         border.color: "black"
 
                         Text {
+                            font.pointSize: root.scale * 2.8
                             anchors.centerIn: parent
                             text: modelData.key
                         }
                     }
 
                     Rectangle {
-                        width: parent.width / 2 - 10
-                        height: Math.max(40, txt.height + 10)
+                        width: parent.width / 2 - root.scale * 4
+                        height: txt.height + root.scale * 4.8
                         border.color: "black"
 
                         Text {
                             id: txt
-                            width: parent.width
+                            font.pointSize: root.scale * 2.8
+                            width: parent.width - root.scale * 4
                             wrapMode: Text.WordWrap
                             anchors.centerIn: parent
                             text: modelData.value
@@ -94,31 +113,38 @@ ApplicationWindow {
         // Подписи
         Rectangle {
             width: parent.width
-            height: 160
+            height: root.scale * 64
+            anchors.left: parent.left
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
+            anchors.leftMargin: root.scale * 8
+            anchors.bottomMargin: root.scale * 8
 
             Column {
-                anchors.centerIn: parent
-                spacing: 10
+                spacing: root.scale * 8
 
                 Text {
+                    font.pointSize: root.scale * 2.8
                     text: 'Документ сформирован ' + root.getDateString()
                 }
 
                 Repeater {
                     model: root.signatures
                     delegate: Row {
-                        spacing: 5
+                        spacing: root.scale * 2
                         Text {
+                            font.pointSize: root.scale * 2.8
                             text: modelData.title
                         }
                         Repeater {
                             model: modelData.fields
                             delegate: ColumnLayout {
-                                spacing: 5
-                                Text { text: '_'.repeat(15) }
+                                spacing: root.scale * 2
                                 Text {
+                                    font.pointSize: root.scale * 2.8
+                                    text: '_'.repeat(root.scale * 6)
+                                }
+                                Text {
+                                    font.pointSize: root.scale * 2.8
                                     text: modelData
                                     horizontalAlignment: Text.AlignHCenter
                                     Layout.fillWidth: true
@@ -128,6 +154,15 @@ ApplicationWindow {
                     }
                 }
             }
+        }
+    }
+
+    Button {
+        text: 'Сохранить...'
+        onClicked: saveFileDialog.open()
+        anchors {
+            top: root.top
+            left: root.left
         }
     }
 }
