@@ -161,9 +161,11 @@ void DataProvider::addTruck(QString model, QString number, float lastMilage, QDa
         { "model", str(model) },
         { "number", str(number) },
         { "last_milage", toStr(lastMilage) },
-        { "last_maintanance_date", convertDate(lastMaintananceDate) }
+        { "last_maintanance_date", str(convertDate(lastMaintananceDate)) }
     };
     const QString queryStr = createInsertQuery("trucks", valueMap);
+
+    qDebug() << queryStr;
 
     QSqlQuery(queryStr, _db);
     update();
