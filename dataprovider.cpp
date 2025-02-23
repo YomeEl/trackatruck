@@ -23,12 +23,21 @@ DataProvider::~DataProvider()
 
 QVector<Driver> DataProvider::getDrivers(const QString &condition)
 {
+    const QString busyDriversQueryStr = "select distinct driver_id from orders where not finished and driver_id is not null";
+    QSqlQuery busyDriversQuery(busyDriversQueryStr, _db);
+    QSet<int> busyDriversIds;
+    while (busyDriversQuery.next()) {
+        busyDriversIds.insert(busyDriversQuery.value(0).toBool());
+    }
+
     const QString queryStr = "select id, name, contract_date from drivers " + condition;
     QVector<Driver> vec;
 
     QSqlQuery query(queryStr, _db);
     while (query.next()) {
-        vec.append(parseDriver(query));
+        Driver d = parseDriver(query);
+        d.isFree = !busyDriversIds.contains(d.id);
+        vec.append(d);
     }
 
     return vec;
@@ -214,8 +223,8 @@ Driver DataProvider::parseDriver(const QSqlQuery &query) const
     Driver d;
 
     d.id = query.value(0).toInt();
-    d.name = query.value(0).toString();
-    d.contractDate = query.value(1).toDateTime();
+    d.name = query.value(1).toString();
+    d.contractDate = query.value(2).toDateTime();
 
     return d;
 }

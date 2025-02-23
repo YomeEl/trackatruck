@@ -8,8 +8,12 @@
         <file>Theme/Theme.qml</file>
         <file>Theme/qmldir</file>
         <file>OrdersPage/OrderDetails.qml</file>
-        <file>Report.qml</file>
         <file>NewOrder.qml</file>
         <file>helpers.js</file>
+        <file>DriversPage/Driver.qml</file>
+        <file>DriversPage/DriversPage.qml</file>
+        <file>DriversPage/qmldir</file>
+        <file>Windows/qmldir</file>
+        <file>Windows/Report.qml</file>
     </qresource>
 </RCC>

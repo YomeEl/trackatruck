@@ -18,7 +18,8 @@ public:
 	{
         IdRole = Qt::UserRole + 1,
         NameRole,
-		ContractDateRole
+        ContractDateRole,
+        IsFreeRole
 	};
 
 	QVariant data(const QModelIndex &index, int role) const;

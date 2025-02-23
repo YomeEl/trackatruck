@@ -32,6 +32,7 @@ public:
     int id;
     QString name;
     QDateTime contractDate;
+    bool isFree;
 
     int getId() const override { return id; }
 };

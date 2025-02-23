@@ -13,6 +13,8 @@ QVariant DriversList::data(const QModelIndex &index, int role) const
         return QVariant::fromValue(item.name);
 	case roles::ContractDateRole:
         return QVariant::fromValue(item.contractDate);
+    case roles::IsFreeRole:
+        return QVariant::fromValue(item.isFree);
     default:
         return QVariant();
 	}
@@ -25,6 +27,7 @@ QHash<int, QByteArray> DriversList::roleNames() const
     names[roles::IdRole] = "id";
 	names[roles::NameRole] = "name";
 	names[roles::ContractDateRole] = "contractDate";
+    names[roles::IsFreeRole] = "isFree";
 
 	return names;
 }

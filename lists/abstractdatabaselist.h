@@ -11,6 +11,7 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     void syncData(const QVector<T> &newData);
+    QVector<T>& data();
 
 protected:
     QVector<T> _data;
