@@ -1,2 +1,4 @@
 build/**
-TrackATruck.pro.user*
+
+*.pro.user
+*.pro.user.*
