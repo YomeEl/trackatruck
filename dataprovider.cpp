@@ -165,8 +165,6 @@ void DataProvider::addTruck(QString model, QString number, float lastMilage, QDa
     };
     const QString queryStr = createInsertQuery("trucks", valueMap);
 
-    qDebug() << queryStr;
-
     QSqlQuery(queryStr, _db);
     update();
 }
@@ -243,7 +241,6 @@ void DataProvider::addOrder(int fromId, int toId, double distance, QString descr
     };
 
     const QString queryStr = createInsertQuery("orders", valueMap);
-    qDebug() << queryStr;
 
     QSqlQuery(queryStr, _db);
     update();
