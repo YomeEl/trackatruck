@@ -28,8 +28,14 @@ ApplicationWindow {
                 text: qsTr("Заказ")
                 onTriggered: newOrderWindow.show()
             }
-            Action { text: qsTr("Водитель") }
-            Action { text: qsTr("Грузовик") }
+            Action {
+                text: qsTr("Водитель")
+                onTriggered: newDriverWindow.show()
+            }
+            Action {
+                text: qsTr("Грузовик")
+                onTriggered: newTruckWindow.show()
+            }
         }
 
         Menu {
@@ -70,6 +76,16 @@ ApplicationWindow {
 
     NewOrder {
         id: newOrderWindow
+        visible: false
+    }
+
+    NewDriver {
+        id: newDriverWindow
+        visible: false
+    }
+
+    NewTruck {
+        id: newTruckWindow
         visible: false
     }
 }

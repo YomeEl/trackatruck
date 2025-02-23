@@ -15,5 +15,7 @@
         <file>Windows/qmldir</file>
         <file>Windows/Report.qml</file>
         <file>Windows/NewOrder.qml</file>
+        <file>Windows/NewDriver.qml</file>
+        <file>Windows/NewTruck.qml</file>
     </qresource>
 </RCC>
