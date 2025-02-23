@@ -11,14 +11,16 @@ Window {
     height: 480
     visible: true
     title: qsTr("Форма создания заказа")
+    modality: Qt.ApplicationModal
 
     Theme { id: theme }
 
     ColumnLayout {
         anchors.centerIn: parent
-        spacing: 10
+        spacing: 5
 
         RowLayout {
+            spacing: 5
             Label {
                 text: "Отправитель:"
                 Layout.minimumWidth: 150
@@ -30,9 +32,13 @@ Window {
                 valueRole: "id"
                 Layout.fillWidth: true
             }
+            Button {
+                text: "Новый..."
+            }
         }
 
         RowLayout {
+            spacing: 5
             Label {
                 text: "Получатель:"
                 Layout.minimumWidth: 150
@@ -44,9 +50,13 @@ Window {
                 valueRole: "id"
                 Layout.fillWidth: true
             }
+            Button {
+                text: "Новый..."
+            }
         }
 
         RowLayout {
+            spacing: 5
             Label {
                 text: "Расстояние:"
                 Layout.minimumWidth: 150
@@ -60,6 +70,7 @@ Window {
         }
 
         RowLayout {
+            spacing: 5
             Label {
                 text: "Описание:"
                 Layout.minimumWidth: 150
@@ -72,6 +83,7 @@ Window {
         }
 
         RowLayout {
+            spacing: 5
             Label {
                 text: "Объявленная стоимость:"
                 Layout.minimumWidth: 150
