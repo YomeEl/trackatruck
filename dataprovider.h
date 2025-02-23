@@ -34,20 +34,21 @@ public:
     Q_INVOKABLE RefuelingsList* getRefuelingsList();
     Q_INVOKABLE OrdersList* getOrdersList();
 
-    Q_INVOKABLE void addDriver(Driver driver) {}
-    Q_INVOKABLE void updateDriver(Driver driver) {}
+    Q_INVOKABLE void addDriver(QString name);
+    Q_INVOKABLE void updateDriverName(int id, QString name);
 
-    Q_INVOKABLE void addTruck(Truck truck) {}
-    Q_INVOKABLE void updateTruck(Truck truck) {}
+    Q_INVOKABLE void addTruck(QString model, QString number, float lastMilage, QDateTime lastMaintananceDate);
+    Q_INVOKABLE void updateTruckNumber(int id, QString number);
+    Q_INVOKABLE void markMaintanance(int id);
 
-    Q_INVOKABLE void addClient(Client client) {}
-    Q_INVOKABLE void updateClient(Client client) {}
+    Q_INVOKABLE void addClient(QString name, QString address);
+    Q_INVOKABLE void updateClient(int id, QString name, QString address);
 
-    Q_INVOKABLE void addRefueling(Refueling refueling) {}
+    Q_INVOKABLE void addRefueling(int driverId, double cost);
 
     Q_INVOKABLE void addOrder(int fromId, int toId, double distance, QString description, double value);
-    Q_INVOKABLE void assignTruckAndDriver(int orderId, int driverId, int truckId, QDateTime finishedAt) {}
-    Q_INVOKABLE void markAsFinished(int orderId) {}
+    Q_INVOKABLE void assignTruckAndDriver(int orderId, int driverId, int truckId, QDateTime finishedAt);
+    Q_INVOKABLE void markAsFinished(int orderId);
     Q_INVOKABLE void cancelOrder(int orderId);
 
 private:
@@ -60,6 +61,11 @@ private:
     Client parseClient(const QSqlQuery &query) const;
     Refueling parseRefueling(const QSqlQuery &query) const;
     Order parseOrder(const QSqlQuery &query) const;
+
+    QString getCurrentDateString() const;
+
+    QString createInsertQuery(const QString &table, const QMap<QString, QString> &values);
+    QString createUpdateQuery(const QString &table, const QMap<QString, QString> &values, const QString &condition);
 
 private slots:
     void update();

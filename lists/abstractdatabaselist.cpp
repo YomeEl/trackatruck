@@ -75,10 +75,4 @@ finish:
     return;
 }
 
-template<typename T>
-QVector<T> &AbstractDatabaseList<T>::data()
-{
-    return _data;
-}
-
 #endif // ABSTRACTDATABASELIST_CPP

@@ -58,7 +58,7 @@ public:
     QString driverName;
     QDateTime driverContractDate;
     QDateTime date;
-    float cost;
+    double cost;
 
     int getId() const override { return id; }
 };

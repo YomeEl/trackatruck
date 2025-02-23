@@ -6,8 +6,7 @@
 #include <QVector>
 
 #define str(s) "'" + s + "'"
-#define tostr(n) QString::number(n)
-#define join + ", " +
+#define toStr(n) QString::number(n)
 
 DataProvider *DataProvider::Instance()
 {
@@ -137,15 +136,139 @@ OrdersList* DataProvider::getOrdersList()
     return &_orders;
 }
 
-void DataProvider::addOrder(int fromId, int toId, double distance, QString description, double value)
+void DataProvider::addDriver(QString name)
 {
-    const QString queryStr =
-        QString("insert into orders (from_id, to_id, distance, description, declared_value, created_at) values (") +
-        tostr(fromId) join tostr(toId) join
-        tostr(distance) join str(description) join tostr(value) join
-        str(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")) + ")";
+    const QMap<QString, QString> valueMap = {
+        { "name", str(name) },
+        { "contract_date", str(getCurrentDateString()) }
+    };
+    const QString queryStr = createInsertQuery("drivers", valueMap);
 
     QSqlQuery(queryStr, _db);
+    update();
+}
+
+void DataProvider::updateDriverName(int id, QString name)
+{
+    const QString queryStr = createUpdateQuery("drivers", {{ "name", str(name) }}, "id = " + toStr(id));
+    QSqlQuery(queryStr, _db);
+    update();
+}
+
+void DataProvider::addTruck(QString model, QString number, float lastMilage, QDateTime lastMaintananceDate)
+{
+    const QMap<QString, QString> valueMap = {
+        { "model", str(model) },
+        { "number", str(number) },
+        { "last_milage", toStr(lastMilage) },
+        { "last_maintanance_date", convertDate(lastMaintananceDate) }
+    };
+    const QString queryStr = createInsertQuery("trucks", valueMap);
+
+    QSqlQuery(queryStr, _db);
+    update();
+}
+
+void DataProvider::updateTruckNumber(int id, QString number)
+{
+    const QString queryStr = createUpdateQuery("trucks", {{ "number", str(number) }}, "id = " + toStr(id));
+    QSqlQuery(queryStr, _db);
+    update();
+}
+
+void DataProvider::markMaintanance(int id)
+{
+    const QString newMilageQueryStr =
+        QString("select sum(distance) from orders join trucks on truck_id = trucks.id") +
+        "where truck_id = " + toStr(id) + " and trucks.last_maintanance_date <= sent_at";
+    QSqlQuery newMilageQuery(newMilageQueryStr, _db);
+    newMilageQuery.next();
+    double newMilage = newMilageQuery.value(0).toDouble();
+
+    const QMap<QString, QString> valueMap = {
+        { "last_milage", "last_milage + " + toStr(newMilage) },
+        { "last_maintanance_date", str(getCurrentDateString()) }
+    };
+    const QString updateQueryStr = createUpdateQuery("trucks", valueMap, "id = " + toStr(id));
+    QSqlQuery(updateQueryStr, _db);
+    update();
+}
+
+void DataProvider::addClient(QString name, QString address)
+{
+    const QMap<QString, QString> valueMap = {
+        { "name", str(name) },
+        { "address", str(address) },
+    };
+    const QString queryStr = createInsertQuery("clients", valueMap);
+
+    QSqlQuery(queryStr, _db);
+    update();
+}
+
+void DataProvider::updateClient(int id, QString name, QString address)
+{
+    const QMap<QString, QString> valueMap = {
+        { "name", str(name) },
+        { "address", str(address) }
+    };
+    const QString updateQueryStr = createUpdateQuery("clients", valueMap, "id = " + toStr(id));
+    QSqlQuery(updateQueryStr, _db);
+    update();
+}
+
+void DataProvider::addRefueling(int driverId, double cost)
+{
+    const QMap<QString, QString> valueMap = {
+        { "driverId", toStr(driverId) },
+        { "cost", toStr(cost) },
+    };
+    const QString queryStr = createInsertQuery("refuelings", valueMap);
+
+    QSqlQuery(queryStr, _db);
+    update();
+}
+
+void DataProvider::addOrder(int fromId, int toId, double distance, QString description, double value)
+{
+    QMap<QString, QString> valueMap = {
+        { "from_id", toStr(fromId) },
+        { "to_id", toStr(toId) },
+        { "distance", toStr(distance) },
+        { "description", str(description) },
+        { "declared_value", toStr(value) },
+        { "created_at", str(getCurrentDateString()) }
+    };
+
+    const QString queryStr = createInsertQuery("orders", valueMap);
+    qDebug() << queryStr;
+
+    QSqlQuery(queryStr, _db);
+    update();
+}
+
+void DataProvider::assignTruckAndDriver(int orderId, int driverId, int truckId, QDateTime receivedAt)
+{
+    QMap<QString, QString> valueMap = {
+        { "driver_id", toStr(driverId) },
+        { "truck_id", toStr(truckId) },
+        { "received_at", str(convertDate(receivedAt)) }
+    };
+
+    const QString updateQueryStr = createUpdateQuery("orders", valueMap, "id = " + toStr(orderId));
+    QSqlQuery(updateQueryStr, _db);
+    update();
+}
+
+void DataProvider::markAsFinished(int orderId)
+{
+    QMap<QString, QString> valueMap = {
+        { "finished", "true" },
+        { "received_at", getCurrentDateString() }
+    };
+
+    const QString updateQueryStr = createUpdateQuery("orders", valueMap, "id = " + toStr(orderId));
+    QSqlQuery(updateQueryStr, _db);
     update();
 }
 
@@ -212,6 +335,35 @@ void DataProvider::update()
     _orders.syncData(getOrders());
 }
 
+QString DataProvider::createInsertQuery(const QString &table, const QMap<QString, QString> &values)
+{
+    QString columnsStr = "";
+    QString valuesStr = "";
+    for (auto it = values.keyValueBegin(); it != values.keyValueEnd(); it++)
+    {
+        columnsStr += it->first + ", ";
+        valuesStr += it->second + ", ";
+    }
+    columnsStr.remove(columnsStr.length() - 2, 2);
+    valuesStr.remove(valuesStr.length() - 2, 2);
+
+    QString query = QString("insert into ") + table + " (" + columnsStr + ") values (" + valuesStr + ")";
+    return query;
+}
+
+QString DataProvider::createUpdateQuery(const QString &table, const QMap<QString, QString> &values, const QString &condition)
+{
+    QString statements = "";
+    for (auto it = values.keyValueBegin(); it != values.keyValueEnd(); it++)
+    {
+        statements += it->first + " = " + it->second + ", ";
+    }
+    statements.remove(statements.length() - 2, 2);
+
+    QString query = QString("update ") + table + " set " + statements + " where " + condition;
+    return query;
+}
+
 QString DataProvider::convertDate(const QDateTime &date) const
 {
     if (!date.isValid() || date.isNull()) return "-";
@@ -261,7 +413,7 @@ Refueling DataProvider::parseRefueling(const QSqlQuery &query) const
     r.driverName = query.value(1).toString();
     r.driverContractDate = query.value(2).toDateTime();
     r.date = query.value(3).toDateTime();
-    r.cost = query.value(4).toFloat();
+    r.cost = query.value(4).toDouble();
 
     return r;
 }
@@ -304,6 +456,10 @@ Order DataProvider::parseOrder(const QSqlQuery &query) const
     return o;
 }
 
+QString DataProvider::getCurrentDateString() const
+{
+    return convertDate(QDateTime::currentDateTime());
+}
+
 #undef str
-#undef tostr
-#undef join
+#undef toStr
