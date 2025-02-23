@@ -19,5 +19,6 @@
         <file>Windows/NewTruck.qml</file>
         <file>TrucksPage/TrucksPage.qml</file>
         <file>TrucksPage/Truck.qml</file>
+        <file>TrucksPage/qmldir</file>
     </qresource>
 </RCC>

@@ -17,9 +17,9 @@ public:
 	enum roles
 	{
         IdRole = Qt::UserRole + 1,
-        ModelRole,
+        TruckModelRole,
 		NumberRole,
-		LastMileageRole,
+        LastMilageRole,
         LastMaintananceDateRole,
         IsFreeRole
 	};

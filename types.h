@@ -16,9 +16,9 @@ struct Truck : public HasId
     Q_GADGET
 public:
     int id;
-    QString model;
+    QString truckModel;
     QString number;
-    float lastMileage;
+    float lastMilage;
     QDateTime lastMaintananceDate;
     bool isFree;
 

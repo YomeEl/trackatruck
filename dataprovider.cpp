@@ -26,7 +26,7 @@ QVector<Driver> DataProvider::getDrivers(const QString &condition)
     QSqlQuery busyDriversQuery(busyDriversQueryStr, _db);
     QSet<int> busyDriversIds;
     while (busyDriversQuery.next()) {
-        busyDriversIds.insert(busyDriversQuery.value(0).toBool());
+        busyDriversIds.insert(busyDriversQuery.value(0).toInt());
     }
 
     const QString queryStr = "select id, name, contract_date from drivers " + condition;
@@ -48,10 +48,10 @@ QVector<Truck> DataProvider::getTrucks(const QString &condition)
     QSqlQuery busyTrucksQuery(busyTrucksQueryStr, _db);
     QSet<int> busyTrucksIds;
     while (busyTrucksQuery.next()) {
-        busyTrucksIds.insert(busyTrucksQuery.value(0).toBool());
+        busyTrucksIds.insert(busyTrucksQuery.value(0).toInt());
     }
 
-    const QString queryStr = "select id, model, number, last_mileage, last_maintanance_date from drivers " + condition;
+    const QString queryStr = "select id, model, number, last_milage, last_maintanance_date from trucks " + condition;
     QVector<Truck> vec;
 
     QSqlQuery query(queryStr, _db);
@@ -394,9 +394,9 @@ Truck DataProvider::parseTruck(const QSqlQuery &query) const
     Truck t;
 
     t.id = query.value(0).toInt();
-    t.model = query.value(1).toString();
+    t.truckModel = query.value(1).toString();
     t.number = query.value(2).toString();
-    t.lastMileage = query.value(3).toFloat();
+    t.lastMilage = query.value(3).toFloat();
     t.lastMaintananceDate = query.value(4).toDateTime();
 
     return t;
