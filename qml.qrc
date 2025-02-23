@@ -17,5 +17,7 @@
         <file>Windows/NewOrder.qml</file>
         <file>Windows/NewDriver.qml</file>
         <file>Windows/NewTruck.qml</file>
+        <file>TrucksPage/TrucksPage.qml</file>
+        <file>TrucksPage/Truck.qml</file>
     </qresource>
 </RCC>

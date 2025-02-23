@@ -20,7 +20,8 @@ public:
         ModelRole,
 		NumberRole,
 		LastMileageRole,
-		LastMaintananceDateRole
+        LastMaintananceDateRole,
+        IsFreeRole
 	};
 
 	QVariant data(const QModelIndex &index, int role) const;

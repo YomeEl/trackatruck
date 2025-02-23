@@ -15,6 +15,8 @@ QVariant TrucksList::data(const QModelIndex &index, int role) const
         return QVariant::fromValue(item.lastMileage);
 	case roles::LastMaintananceDateRole:
         return QVariant::fromValue(item.lastMaintananceDate);
+    case roles::IsFreeRole:
+        return QVariant::fromValue(item.isFree);
     default:
         return QVariant();
 	}
@@ -29,6 +31,7 @@ QHash<int, QByteArray> TrucksList::roleNames() const
 	names[roles::NumberRole] = "number";
 	names[roles::LastMileageRole] = "lastMileage";
 	names[roles::LastMaintananceDateRole] = "lastMaintananceDate";
+    names[roles::IsFreeRole] = "isFree";
 
 	return names;
 }

@@ -20,6 +20,7 @@ public:
     QString number;
     float lastMileage;
     QDateTime lastMaintananceDate;
+    bool isFree;
 
     int getId() const override { return id; }
 };

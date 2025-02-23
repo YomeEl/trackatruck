@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 
 import 'OrdersPage'
 import 'DriversPage'
+import 'TrucksPage'
 import 'Windows'
 import 'helpers.js' as Helpers
 
@@ -48,7 +49,10 @@ ApplicationWindow {
                 text: qsTr("Водители")
                 onTriggered: root.pushPage(driversPage)
             }
-            Action { text: qsTr("Автопарк") }
+            Action {
+                text: qsTr("Автопарк")
+                onTriggered: root.pushPage(trucksPage)
+            }
             Action { text: qsTr("Клиенты") }
         }
         Menu {
@@ -72,6 +76,11 @@ ApplicationWindow {
     Component {
         id: driversPage
         DriversPage {}
+    }
+
+    Component {
+        id: trucksPage
+        TrucksPage {}
     }
 
     NewOrder {

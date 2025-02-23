@@ -44,12 +44,21 @@ QVector<Driver> DataProvider::getDrivers(const QString &condition)
 
 QVector<Truck> DataProvider::getTrucks(const QString &condition)
 {
+    const QString busyTrucksQueryStr = "select distinct truck_id from orders where not finished and truck_id is not null";
+    QSqlQuery busyTrucksQuery(busyTrucksQueryStr, _db);
+    QSet<int> busyTrucksIds;
+    while (busyTrucksQuery.next()) {
+        busyTrucksIds.insert(busyTrucksQuery.value(0).toBool());
+    }
+
     const QString queryStr = "select id, model, number, last_mileage, last_maintanance_date from drivers " + condition;
     QVector<Truck> vec;
 
     QSqlQuery query(queryStr, _db);
     while (query.next()) {
-        vec.append(parseTruck(query));
+        Truck t = parseTruck(query);
+        t.isFree = !busyTrucksIds.contains(t.id);
+        vec.append(t);
     }
 
     return vec;
