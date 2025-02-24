@@ -5,6 +5,8 @@ import QtQuick.Controls 2.15
 import 'OrdersPage'
 import 'DriversPage'
 import 'TrucksPage'
+import 'ClientsPage'
+
 import 'Windows'
 import 'helpers.js' as Helpers
 
@@ -37,6 +39,10 @@ ApplicationWindow {
                 text: qsTr("Грузовик")
                 onTriggered: newTruckWindow.show()
             }
+            Action {
+                text: qsTr("Клиент")
+                onTriggered: newClientWindow.show()
+            }
         }
 
         Menu {
@@ -53,7 +59,10 @@ ApplicationWindow {
                 text: qsTr("Автопарк")
                 onTriggered: root.pushPage(trucksPage)
             }
-            Action { text: qsTr("Клиенты") }
+            Action {
+                text: qsTr("Клиенты")
+                onTriggered: root.pushPage(clientsPage)
+            }
         }
         Menu {
             title: qsTr("Отчёт")
@@ -65,8 +74,12 @@ ApplicationWindow {
     StackView {
         id: stackView
         initialItem: ordersPage
-        anchors.fill: parent
+        anchors {
+            fill: parent
+        }
     }
+
+    // Pages
 
     Component {
         id: ordersPage
@@ -83,6 +96,13 @@ ApplicationWindow {
         TrucksPage {}
     }
 
+    Component {
+        id: clientsPage
+        ClientsPage {}
+    }
+
+    // Windows
+
     NewOrder {
         id: newOrderWindow
         visible: false
@@ -95,6 +115,11 @@ ApplicationWindow {
 
     NewTruck {
         id: newTruckWindow
+        visible: false
+    }
+
+    NewClient {
+        id: newClientWindow
         visible: false
     }
 }

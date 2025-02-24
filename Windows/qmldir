@@ -2,3 +2,4 @@ Report 1.0 Report.qml
 NewOrder 1.0 NewOrder.qml
 NewDriver 1.0 NewDriver.qml
 NewTruck 1.0 NewTruck.qml
+NewClient 1.0 NewClient.qml

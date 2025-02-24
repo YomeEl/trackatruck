@@ -20,5 +20,9 @@
         <file>TrucksPage/TrucksPage.qml</file>
         <file>TrucksPage/Truck.qml</file>
         <file>TrucksPage/qmldir</file>
+        <file>ClientsPage/ClientsPage.qml</file>
+        <file>ClientsPage/Client.qml</file>
+        <file>ClientsPage/qmldir</file>
+        <file>Windows/NewClient.qml</file>
     </qresource>
 </RCC>

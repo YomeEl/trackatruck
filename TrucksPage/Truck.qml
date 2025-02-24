@@ -7,7 +7,7 @@ Rectangle {
     Theme { id: theme }
 
     visible: free === truckModel.isFree
-    height: visible ? 40 : 0
+    height: visible ? 50 : 0
     width: parent ? parent.width : 0
 
     property var truckModel
