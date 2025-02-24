@@ -44,7 +44,7 @@ public:
     Q_INVOKABLE void addClient(QString name, QString address);
     Q_INVOKABLE void updateClient(int id, QString name, QString address);
 
-    Q_INVOKABLE void addRefueling(int driverId, double cost);
+    Q_INVOKABLE void addRefueling(int driverId, double cost, QDateTime date);
 
     Q_INVOKABLE void addOrder(int fromId, int toId, double distance, QString description, double value);
     Q_INVOKABLE void assignTruckAndDriver(int orderId, int driverId, int truckId, QDateTime finishedAt);

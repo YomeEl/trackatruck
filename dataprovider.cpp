@@ -226,11 +226,12 @@ void DataProvider::updateClient(int id, QString name, QString address)
     update();
 }
 
-void DataProvider::addRefueling(int driverId, double cost)
+void DataProvider::addRefueling(int driverId, double cost, QDateTime date)
 {
     const QMap<QString, QString> valueMap = {
         { "driverId", toStr(driverId) },
         { "cost", toStr(cost) },
+        { "date", convertDate(date) }
     };
     const QString queryStr = createInsertQuery("refuelings", valueMap);
 

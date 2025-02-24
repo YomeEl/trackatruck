@@ -43,6 +43,10 @@ ApplicationWindow {
                 text: qsTr("Клиент")
                 onTriggered: newClientWindow.show()
             }
+            Action {
+                text: qsTr("Дозаправка")
+                onTriggered: newRefuelingWindow.show()
+            }
         }
 
         Menu {
@@ -120,6 +124,11 @@ ApplicationWindow {
 
     NewClient {
         id: newClientWindow
+        visible: false
+    }
+
+    NewRefueling {
+        id: newRefuelingWindow
         visible: false
     }
 }
