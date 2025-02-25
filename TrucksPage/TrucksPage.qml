@@ -15,8 +15,6 @@ GridLayout {
 
     property var selectedTruck: null
 
-    signal generateReport(var order)
-
     Text {
         text: 'Грузовики'
         font.pointSize: 20

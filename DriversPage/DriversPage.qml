@@ -15,8 +15,6 @@ GridLayout {
 
     property var selectedDriver: null
 
-    signal generateReport(var order)
-
     Text {
         text: 'Водители'
         font.pointSize: 20

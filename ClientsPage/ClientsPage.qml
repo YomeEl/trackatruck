@@ -11,7 +11,7 @@ ColumnLayout {
 
     spacing: 5
 
-    signal generateReport(var order)
+    property var selectedClient: null
 
     Text {
         text: 'Клиенты'
@@ -19,6 +19,38 @@ ColumnLayout {
         horizontalAlignment: Text.AlignHCenter
         Layout.preferredWidth: parent.width / 2
         Layout.fillWidth: true
+    }
+
+    RowLayout {
+        Layout.alignment: Qt.AlignHCenter
+        height: childrenRect.height
+        visible: selectedClient !== null
+
+        Text {
+            text: "Название"
+        }
+
+        TextField {
+            id: newName
+            text: ""
+        }
+
+        Text {
+            text: "Адрес"
+        }
+
+        TextField {
+            id: newAddress
+            text: ""
+        }
+
+        Button {
+            text: "Изменить"
+            enabled:
+                newName.text && newName.text !== "" && newAddress.text && newAddress.text !== "" &&
+                (newName.text !== selectedClient.name || newAddress.text !== selectedClient.address)
+            onClicked: DataProvider.updateClient(selectedClient.id, newName.text, newAddress.text)
+        }
     }
 
     ListView {
@@ -34,6 +66,13 @@ ColumnLayout {
         model: DataProvider.getClientsList()
         delegate: Client {
             clientModel: model
+            isSelected: selectedClient === model
+            onSelected: selectedClient = model
         }
+    }
+
+    onSelectedClientChanged: {
+        newName.text = selectedClient.name
+        newAddress.text = selectedClient.address
     }
 }
