@@ -269,11 +269,12 @@ void DataProvider::addOrder(int fromId, int toId, double distance, QString descr
     update();
 }
 
-void DataProvider::assignTruckAndDriver(int orderId, int driverId, int truckId, QDateTime receivedAt)
+void DataProvider::assignTruckAndDriver(int orderId, int driverId, int truckId, QDateTime sentAt, QDateTime receivedAt)
 {
     QMap<QString, QString> valueMap = {
         { "driver_id", toStr(driverId) },
         { "truck_id", toStr(truckId) },
+        { "sent_at", str(convertDate(sentAt)) },
         { "received_at", str(convertDate(receivedAt)) }
     };
 

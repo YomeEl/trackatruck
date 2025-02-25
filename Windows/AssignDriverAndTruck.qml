@@ -8,7 +8,7 @@ import '../Theme'
 Window {
     id: root
     width: 640
-    height: 480
+    height: 700
     visible: true
     title: qsTr("Форма назначения водителя и грузовика")
     modality: Qt.ApplicationModal
@@ -67,7 +67,7 @@ Window {
                     width: truck.width
                     height: model.isFree ? implicitHeight : 0
                     Text {
-                        text: model.name
+                        text: model.truckModel
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: parent.left
@@ -81,11 +81,23 @@ Window {
         RowLayout {
             spacing: 5
             Label {
-                text: "Ожидаемая дата доставки: "
+                text: "Дата отправления: "
                 Layout.minimumWidth: 150
             }
             CalendarControl {
-                id: date
+                id: sentAt
+                minimumDate: new Date()
+            }
+        }
+
+        RowLayout {
+            spacing: 5
+            Label {
+                text: "Ожидаемая дата прибытия: "
+                Layout.minimumWidth: 150
+            }
+            CalendarControl {
+                id: receivedAt
                 minimumDate: new Date()
             }
         }
@@ -101,8 +113,33 @@ Window {
 
                 const driverId = driver.currentValue
                 const truckId = truck.currentValue
-                DataProvider.assignTruckAndDriver(root.orderId, driverId, truckId, date.selectedDate)
+                const sent = sentAt.selectedDate
+                const received = receivedAt.selectedDate
+
+                const datesErrorMessage = 'Дата отправления должна наступить раньше даты получения'
+
+                var errors = []
+                if (sent > received) errors.push(datesErrorMessage)
+
+                errorsRepeater.model = errors
+                if (errors.length > 0) return
+
+                DataProvider.assignTruckAndDriver(root.orderId, driverId, truckId, sent, received)
                 root.close();
+            }
+        }
+
+        Text {
+            visible: errorsRepeater.model.length > 0
+            text: "Ошибки:"
+        }
+
+        Repeater {
+            id: errorsRepeater
+            model: []
+            delegate: Text {
+                color: theme.warningHigh
+                text: modelData
             }
         }
     }
