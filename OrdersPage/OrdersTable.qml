@@ -11,10 +11,12 @@ ListView {
     signal selected(var model)
 
     function selectWarningLevel(model) {
-        const ok = 0
-        const pending = 1
-        const late = 2
+        const finished = 0
+        const ok = 1
+        const pending = 2
+        const late = 3
 
+        if (model.finished) return finished
         if (!model.driverName) return pending
         if (new Date(model.receivedAt) < Date.now() && !model.finished) return late
         return ok

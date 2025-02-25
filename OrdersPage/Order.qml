@@ -11,8 +11,8 @@ Rectangle {
     property string route;
     property string driver;
     property int warningLevel: 0;
-    property var colors: [theme.background, theme.warningLow, theme.warningHigh]
-    property var accentColors: [theme.accent, theme.warningLowAccent, theme.warningHighAccent]
+    property var colors: [theme.success, theme.background, theme.warningLow, theme.warningHigh]
+    property var accentColors: [theme.successAccent, theme.accent, theme.warningLowAccent, theme.warningHighAccent]
     property bool useAccent: false
     property bool isSelected: false
 
