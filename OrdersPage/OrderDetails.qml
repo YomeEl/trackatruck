@@ -78,7 +78,7 @@ Rectangle {
                 onClicked: generateReport(root.model)
             }
             Button {
-                visible: root.model && root.model.driverName
+                visible: root.model && root.model.driverName && !root.model.finished
                 text: 'Отметить как выполненный'
                 onClicked: DataProvider.markAsFinished(root.model.id)
             }
