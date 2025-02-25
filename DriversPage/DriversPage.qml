@@ -13,6 +13,8 @@ GridLayout {
     columnSpacing: 0
     rowSpacing: 0
 
+    property var selectedDriver: null
+
     signal generateReport(var order)
 
     Text {
@@ -22,6 +24,24 @@ GridLayout {
         Layout.preferredWidth: parent.width / 3
         Layout.columnSpan: 2
         Layout.fillWidth: true
+    }
+
+    RowLayout {
+        Layout.columnSpan: 2
+        Layout.alignment: Qt.AlignHCenter
+        height: childrenRect.height
+        visible: selectedDriver !== null
+
+        TextField {
+            id: newName
+            text: ""
+        }
+
+        Button {
+            text: "Изменить фио"
+            enabled: newName.text && newName.text !== "" && newName.text !== selectedDriver.name
+            onClicked: DataProvider.updateDriverName(selectedDriver.id, newName.text)
+        }
     }
 
     ListView {
@@ -43,6 +63,8 @@ GridLayout {
         delegate: Driver {
             free: true
             driverModel: model
+            isSelected: selectedDriver === model
+            onSelected: selectedDriver = model
         }
     }
 
@@ -65,6 +87,10 @@ GridLayout {
         delegate: Driver {
             free: false
             driverModel: model
+            isSelected: selectedDriver === model
+            onSelected: selectedDriver = model
         }
     }
+
+    onSelectedDriverChanged: newName.text = selectedDriver.name
 }

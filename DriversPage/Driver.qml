@@ -8,12 +8,16 @@ Rectangle {
     visible: free === driverModel.isFree
     height: visible ? childrenRect.height : 0
     width: parent ? parent.width : 0
+    border.width: isSelected ? 3 : 0
 
     property var driverModel
     property bool useAccent: false
     property bool free
+    property bool isSelected: false
 
-    color: useAccent ? theme.accent : theme.background
+    signal selected()
+
+    color: useAccent || isSelected ? theme.accent : theme.background
 
     Column {
         padding: 5
@@ -31,5 +35,6 @@ Rectangle {
         hoverEnabled: true
         onEntered: root.useAccent = true
         onExited: root.useAccent = false
+        onClicked: selected()
     }
 }
