@@ -41,7 +41,7 @@ public:
     Q_INVOKABLE void updateTruckNumber(int id, QString number);
     Q_INVOKABLE void markMaintanance(int id);
 
-    Q_INVOKABLE void addClient(QString name, QString address);
+    Q_INVOKABLE int addClient(QString name, QString address, bool returnId = false);
     Q_INVOKABLE void updateClient(int id, QString name, QString address);
 
     Q_INVOKABLE void addRefueling(int driverId, double cost, QDateTime date);

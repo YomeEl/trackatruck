@@ -204,7 +204,7 @@ void DataProvider::markMaintanance(int id)
     update();
 }
 
-void DataProvider::addClient(QString name, QString address)
+int DataProvider::addClient(QString name, QString address, bool returnId)
 {
     const QMap<QString, QString> valueMap = {
         { "name", str(name) },
@@ -214,6 +214,16 @@ void DataProvider::addClient(QString name, QString address)
 
     QSqlQuery(queryStr, _db);
     update();
+
+    if (!returnId) return -1;
+    const QString idQueryStr =
+        QString("select id from clients where name = ") + str(name) +
+        " and address = " + str(address) +
+        " order by id desc";
+    QSqlQuery idQuery(idQueryStr, _db);
+    idQuery.next();
+    int id = idQuery.value(0).toInt();
+    return id;
 }
 
 void DataProvider::updateClient(int id, QString name, QString address)

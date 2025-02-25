@@ -12,6 +12,7 @@ Window {
     visible: true
     title: qsTr("Форма добавления клиента")
     modality: Qt.ApplicationModal
+    property var callback: null
 
     Theme { id: theme }
 
@@ -59,7 +60,8 @@ Window {
                 errorsRepeater.model = errors
                 if (errors.length > 0) return
 
-                DataProvider.addClient(name.text, address.text)
+                const clientId = DataProvider.addClient(name.text, address.text, callback ? true : false)
+                if (callback) callback(clientId)
                 root.close();
             }
         }

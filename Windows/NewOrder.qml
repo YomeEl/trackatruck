@@ -34,6 +34,14 @@ Window {
             }
             Button {
                 text: "Новый..."
+                onClicked: {
+                    newClientWindow.callback = clientId => {
+                        const index = from.indexOfValue(clientId)
+                        from.currentIndex = index
+                    }
+
+                    newClientWindow.show()
+                }
             }
         }
 
@@ -52,6 +60,14 @@ Window {
             }
             Button {
                 text: "Новый..."
+                onClicked: {
+                    newClientWindow.callback = clientId => {
+                        const index = to.indexOfValue(clientId)
+                        to.currentIndex = index
+                    }
+
+                    newClientWindow.show()
+                }
             }
         }
 
@@ -171,5 +187,10 @@ Window {
                 text: modelData
             }
         }
+    }
+
+    NewClient {
+        id: newClientWindow
+        visible: false
     }
 }
