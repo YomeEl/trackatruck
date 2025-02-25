@@ -13,6 +13,8 @@ GridLayout {
     columnSpacing: 0
     rowSpacing: 5
 
+    property var selectedTruck: null
+
     signal generateReport(var order)
 
     Text {
@@ -28,13 +30,21 @@ GridLayout {
         Layout.columnSpan: 2
         Layout.alignment: Qt.AlignHCenter
         height: childrenRect.height
+        visible: selectedTruck !== null
+
         Button {
             text: "Отметить ТО"
-            enabled: false
+            onClicked: DataProvider.markMaintanance(selectedTruck.id)
         }
+        TextField {
+            id: newNumber
+            text: ""
+        }
+
         Button {
             text: "Изменить гос. номер"
-            enabled: false
+            enabled: newNumber.text && newNumber.text !== "" && newNumber.text !== selectedTruck.number
+            onClicked: DataProvider.updateTruckNumber(selectedTruck.id, newNumber.text)
         }
     }
 
@@ -57,6 +67,8 @@ GridLayout {
         delegate: Truck {
             free: true
             truckModel: model
+            isSelected: selectedTruck === model
+            onSelected: selectedTruck = model
         }
     }
 
@@ -79,6 +91,10 @@ GridLayout {
         delegate: Truck {
             free: false
             truckModel: model
+            isSelected: selectedTruck === model
+            onSelected: selectedTruck = model
         }
     }
+
+    onSelectedTruckChanged: newNumber.text = selectedTruck.number
 }

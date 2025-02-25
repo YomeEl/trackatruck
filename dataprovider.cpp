@@ -192,8 +192,10 @@ void DataProvider::markMaintanance(int id)
         QString("select sum(distance) from orders join trucks on truck_id = trucks.id") +
         "where truck_id = " + toStr(id) + " and trucks.last_maintanance_date <= sent_at";
     QSqlQuery newMilageQuery(newMilageQueryStr, _db);
-    newMilageQuery.next();
-    double newMilage = newMilageQuery.value(0).toDouble();
+
+    double newMilage = 0;
+    if (newMilageQuery.next())
+        newMilage = newMilageQuery.value(0).toDouble();
 
     const QMap<QString, QString> valueMap = {
         { "last_milage", "last_milage + " + toStr(newMilage) },

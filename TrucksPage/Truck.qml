@@ -9,12 +9,16 @@ Rectangle {
     visible: free === truckModel.isFree
     height: visible ? 50 : 0
     width: parent ? parent.width : 0
+    border.width: isSelected ? 3 : 0
 
     property var truckModel
     property bool useAccent: false
     property bool free
+    property bool isSelected: false
 
-    color: useAccent ? theme.accent : theme.background
+    signal selected()
+
+    color: useAccent || isSelected ? theme.accent : theme.background
 
     GridLayout {
         columns: 2
@@ -47,5 +51,6 @@ Rectangle {
         hoverEnabled: true
         onEntered: root.useAccent = true
         onExited: root.useAccent = false
+        onClicked: selected()
     }
 }
