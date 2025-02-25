@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
+import '../Windows/'
 import '../Theme'
 import '../helpers.js' as Helpers
 
@@ -83,6 +84,7 @@ Rectangle {
             Button {
                 visible: root.model && !root.model.driverName
                 text: 'Назначить водителя и грузовик'
+                onClicked: assignDriverAndTruckWindow.show()
             }
             Button {
                 visible: root.model && !root.model.finished
@@ -90,5 +92,10 @@ Rectangle {
                 onClicked: DataProvider.cancelOrder(root.model.id)
             }
         }
+    }
+
+    AssignDriverAndTruck {
+        id: assignDriverAndTruckWindow
+        visible: false
     }
 }

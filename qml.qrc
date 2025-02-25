@@ -26,5 +26,6 @@
         <file>Windows/NewClient.qml</file>
         <file>Windows/NewRefueling.qml</file>
         <file>Windows/CalendarControl.qml</file>
+        <file>Windows/AssignDriverAndTruck.qml</file>
     </qresource>
 </RCC>
