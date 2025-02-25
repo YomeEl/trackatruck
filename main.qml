@@ -85,7 +85,7 @@ ApplicationWindow {
                         reportWindow.title = "Отчёт о нагрузке"
                         reportWindow.tableHeader = ["ФИО", "Заказов", "В пути (ч)", "Расстояние (км)"]
                         reportWindow.tableData = rows
-                        reportWindow.signatures = { title: "Бухгалтер", fields: ["ФИО", "подпись", "дата"] }
+                        reportWindow.signatures = [{ title: "Бухгалтер", fields: ["ФИО", "подпись", "дата"] }]
                         reportWindow.periodBegin = begin
                         reportWindow.periodEnd = end
                         reportWindow.show()

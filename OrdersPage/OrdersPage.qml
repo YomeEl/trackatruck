@@ -60,8 +60,12 @@ GridLayout {
         appendTableRow(rows, 'Расстояние', Helpers.splitWithDots(order.distance) + ' км')
         appendTableRow(rows, 'Дата создания заказа', order.createdAtString)
         appendTableRow(rows, 'Дата отправления заказа', order.sentAtString)
-        appendTableRow(rows, 'Дата получения заказа (расчётная)', order.receivedAtString)
-        appendTableRow(rows, 'Дата получения заказа (фактическая)', '')
+        if (!order.finished) {
+            appendTableRow(rows, 'Дата получения заказа (расчётная)', order.receivedAtString)
+            appendTableRow(rows, 'Дата получения заказа (фактическая)', '')
+        } else {
+            appendTableRow(rows, 'Дата получения заказа', order.receivedAtString)
+        }
         appendTableRow(rows, 'Описание груза', order.description)
         appendTableRow(rows, 'Объяевленная стоимость груза', Helpers.formatMoney(order.value))
 

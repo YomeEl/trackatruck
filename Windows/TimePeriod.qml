@@ -74,7 +74,16 @@ Window {
             Layout.alignment: Qt.AlignHCenter
             onClicked: {
                 const beginDate = begin.selectedDate
+                beginDate.setHours(0)
+                beginDate.setMinutes(0)
+                beginDate.setSeconds(0)
+                beginDate.setMilliseconds(0)
+
                 const endDate = end.selectedDate
+                endDate.setHours(23)
+                endDate.setMinutes(59)
+                endDate.setSeconds(59)
+                endDate.setMilliseconds(99)
 
                 const datesErrorMessage = 'Дата начала периода должна наступить раньше даты его окончания'
 
