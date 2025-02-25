@@ -13,8 +13,7 @@ SOURCES += \
         lists/orderslist.cpp \
         lists/refuelingslist.cpp \
         lists/truckslist.cpp \
-        main.cpp \
-        timecontrol.cpp
+        main.cpp
 
 RESOURCES += qml.qrc
 
@@ -48,5 +47,4 @@ HEADERS += \
     lists/orderslist.h \
     lists/refuelingslist.h \
     lists/truckslist.h \
-    timecontrol.h \
     types.h
