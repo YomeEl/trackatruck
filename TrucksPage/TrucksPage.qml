@@ -11,7 +11,7 @@ GridLayout {
 
     columns: 2
     columnSpacing: 0
-    rowSpacing: 0
+    rowSpacing: 5
 
     signal generateReport(var order)
 
@@ -22,6 +22,20 @@ GridLayout {
         Layout.preferredWidth: parent.width / 3
         Layout.columnSpan: 2
         Layout.fillWidth: true
+    }
+
+    RowLayout {
+        Layout.columnSpan: 2
+        Layout.alignment: Qt.AlignHCenter
+        height: childrenRect.height
+        Button {
+            text: "Отметить ТО"
+            enabled: false
+        }
+        Button {
+            text: "Изменить гос. номер"
+            enabled: false
+        }
     }
 
     ListView {
