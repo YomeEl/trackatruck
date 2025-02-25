@@ -5,3 +5,4 @@ NewTruck 1.0 NewTruck.qml
 NewClient 1.0 NewClient.qml
 NewRefueling 1.0 NewRefueling.qml
 AssignDriverAndTruck 1.0 AssignDriverAndTruck.qml
+TimePeriod 1.0 TimePeriod.qml

@@ -23,21 +23,25 @@ ApplicationWindow {
     property var tableData: []
     property var signatures: []
 
+    property var tableHeader: []
     property var pageTableData: tableData.slice(currentPage * rowsOnPage, (currentPage + 1) * rowsOnPage)
 
     property int rowsOnPage: 16
     property int currentPage: 0
     readonly property int pages: (tableData.length / rowsOnPage) + 1
 
-    function getDateString() {
-        let date = new Date
+    property var periodBegin: null
+    property var periodEnd: null
+
+    function getDateString(joinWith = ' в ', date = new Date) {
+        if (!date) date = new Date
         let d = String(date.getDate()).padStart(2, '0')
         let m = String(date.getMonth() + 1).padStart(2, '0')
         let y = date.getFullYear()
         let hrs = date.getHours()
         let min = String(date.getMinutes()).padStart(2, '0')
 
-        return [d, m, y].join('.') + ' в ' + [hrs, min].join(':')
+        return [d, m, y].join('.') + joinWith + [hrs, min].join(':')
     }
 
     FileDialog {
@@ -65,53 +69,45 @@ ApplicationWindow {
 
         // Заголовок
         Text {
-            text: root.title + ' №' + root.number
+            id: titleText
+            text: root.title + (root.number > 0 ? (' №' + root.number) : '')
             font.pointSize: Math.round(root.scale * 9.6)
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: root.scale * 8
         }
 
+        Text {
+            id: periodText
+            visible: periodBegin && periodEnd
+            text: "За период с " + getDateString(' ', root.periodBegin) + " по " + getDateString(' ', root.periodEnd)
+            font.pointSize: Math.round(root.scale * 5)
+            anchors.top: titleText.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: root.scale * 4
+        }
+
         // Таблица
         Column {
-            anchors.top: parent.top
+            anchors.top: periodText.bottom
             anchors.left: parent.left
-            anchors.topMargin: root.scale * 32
+            anchors.topMargin: root.scale * 4
             anchors.leftMargin: root.scale * 8
             width: parent.width - root.scale * 16
             spacing: -1
 
+            ReportRow {
+                visible: tableHeader.length > 0
+                scale: root.scale
+                rowModel: tableHeader
+                borderWidth: 3
+            }
+
             Repeater {
                 model: root.pageTableData
-                Row {
-                    spacing: -1
-                    width: parent.width
-                    Rectangle {
-                        width: parent.width / 2 - root.scale * 4
-                        height: txt.height + root.scale * 4.8
-                        border.color: "black"
-
-                        Text {
-                            font.pointSize: root.scale * 2.8
-                            anchors.centerIn: parent
-                            text: modelData.key
-                        }
-                    }
-
-                    Rectangle {
-                        width: parent.width / 2 - root.scale * 4
-                        height: txt.height + root.scale * 4.8
-                        border.color: "black"
-
-                        Text {
-                            id: txt
-                            font.pointSize: root.scale * 2.8
-                            width: parent.width - root.scale * 4
-                            wrapMode: Text.WordWrap
-                            anchors.centerIn: parent
-                            text: modelData.value
-                        }
-                    }
+                ReportRow {
+                    scale: root.scale
+                    rowModel: modelData
                 }
             }
         }
@@ -119,7 +115,7 @@ ApplicationWindow {
         // Подписи
         Rectangle {
             width: parent.width
-            height: root.scale * 64
+            height: signatures.length > 0 ? root.scale * 64 : pageText.height
             anchors.left: parent.left
             anchors.bottom: parent.bottom
             anchors.leftMargin: root.scale * 8
@@ -129,6 +125,7 @@ ApplicationWindow {
                 spacing: root.scale * 8
 
                 Repeater {
+                    visible: signatures.length > 0
                     model: root.signatures
                     delegate: Row {
                         spacing: root.scale * 2
@@ -164,6 +161,7 @@ ApplicationWindow {
                     }
 
                     Text {
+                        id: pageText
                         font.pointSize: root.scale * 2.8
                         text: 'Страница ' + (currentPage + 1) + ' из ' + pages
                     }

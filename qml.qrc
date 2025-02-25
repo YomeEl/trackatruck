@@ -27,5 +27,7 @@
         <file>Windows/NewRefueling.qml</file>
         <file>Windows/CalendarControl.qml</file>
         <file>Windows/AssignDriverAndTruck.qml</file>
+        <file>Windows/TimePeriod.qml</file>
+        <file>Windows/ReportRow.qml</file>
     </qresource>
 </RCC>

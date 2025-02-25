@@ -302,6 +302,39 @@ void DataProvider::cancelOrder(int orderId)
     update();
 }
 
+QVariantList DataProvider::getDriverReportData(QDateTime begin, QDateTime end)
+{
+    const QString betweenString =
+        QString("between ") + str(convertDate(begin)) + " and " str(convertDate(end));
+
+    const QString queryStr =
+        QString("select name, coalesce(distanceSum, 0), coalesce(cnt, 0) from drivers ") +
+        QString("left join ") +
+        QString("    (select sum(distance) as distanceSum, count(distance) as cnt, driver_id ")+
+        QString("    from orders ") +
+        QString("    where finished and ") +
+        QString("        sent_at " + betweenString + " and ") +
+        QString("        received_at " + betweenString + " ") +
+        QString("    group by driver_id) ") +
+        QString("on driver_id = drivers.id ") +
+        QString("order by name");
+
+    QSqlQuery query(queryStr, _db);
+    QVariantList list;
+    const double averageSpeedKmh = 60.0;
+    while (query.next())
+    {
+        auto row = DriverReportRow {
+            query.value(0).toString(),
+            query.value(2).toUInt(),
+            query.value(1).toDouble() / averageSpeedKmh,
+            query.value(1).toDouble()};
+        list.append(QVariant::fromValue(row.toMap()));
+    }
+
+    return list;
+}
+
 DataProvider::DataProvider() :
     _drivers(this), _trucks(this), _clients(this), _refuelings(this), _orders(this)
 {

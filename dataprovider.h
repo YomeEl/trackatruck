@@ -51,6 +51,8 @@ public:
     Q_INVOKABLE void markAsFinished(int orderId);
     Q_INVOKABLE void cancelOrder(int orderId);
 
+    Q_INVOKABLE QVariantList getDriverReportData(QDateTime begin, QDateTime end);
+
 private:
     DataProvider();
 

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QDateTime>
+#include <QVariantMap>
 
 class HasId
 {
@@ -97,5 +98,22 @@ public:
     int getId() const override { return id; }
 };
 Q_DECLARE_METATYPE(Order)
+
+struct DriverReportRow
+{
+    QString name;
+    size_t ordersFinished;
+    double hoursEnroute;
+    double distanceTraveled;
+
+    QVariantMap toMap() {
+        QVariantMap map;
+        map["name"] = name;
+        map["ordersFinished"] = ordersFinished;
+        map["hoursEnroute"] = hoursEnroute;
+        map["distanceTraveled"] = distanceTraveled;
+        return map;
+    }
+};
 
 #endif // TYPES_H

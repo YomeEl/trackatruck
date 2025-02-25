@@ -36,7 +36,7 @@ GridLayout {
     }
 
     function appendTableRow(rows, key, value) {
-        rows.push({ key: key, value: value })
+        rows.push([key, value])
     }
 
     function appendSignature(signatures, title, fields) {

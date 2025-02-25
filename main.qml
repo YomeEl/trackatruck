@@ -70,8 +70,43 @@ ApplicationWindow {
         }
         Menu {
             title: qsTr("Отчёт")
-            Action { text: qsTr("О заказах") }
-            Action { text: qsTr("О расходах на топливо") }
+            Action {
+                text: qsTr("О нагрузке")
+
+                onTriggered: {
+                    timePeriodWindow.title = "Выбор временного интервала для отчёта о нагрузке"
+
+                    timePeriodWindow.callback = (begin, end) => {
+                        const data = DataProvider.getDriverReportData(begin, end)
+                        let rows = []
+                        for (const o of data) {
+                            rows.push([o.name, o.ordersFinished, o.hoursEnroute, o.distanceTraveled])
+                        }
+                        reportWindow.title = "Отчёт о нагрузке"
+                        reportWindow.tableHeader = ["ФИО", "Заказов", "В пути (ч)", "Расстояние (км)"]
+                        reportWindow.tableData = rows
+                        reportWindow.signatures = { title: "Бухгалтер", fields: ["ФИО", "подпись", "дата"] }
+                        reportWindow.periodBegin = begin
+                        reportWindow.periodEnd = end
+                        reportWindow.show()
+                    }
+
+                    timePeriodWindow.show()
+                }
+            }
+            Action {
+                text: qsTr("О расходах на топливо")
+                onTriggered: {
+                    timePeriodWindow = "Выбор временного интервала для отчёта расходах на топливо"
+
+                    timePeriodWindow.callback = (begin, end) => {
+                        console.log(begin, end)
+                        DataProvider.getDriverReportData(begin, end)
+                    }
+
+                    timePeriodWindow.show()
+                }
+            }
         }
     }
 
@@ -129,6 +164,16 @@ ApplicationWindow {
 
     NewRefueling {
         id: newRefuelingWindow
+        visible: false
+    }
+
+    TimePeriod {
+        id: timePeriodWindow
+        visible: false
+    }
+
+    Report {
+        id: reportWindow
         visible: false
     }
 }
