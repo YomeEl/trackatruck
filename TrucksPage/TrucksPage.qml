@@ -44,6 +44,11 @@ GridLayout {
             enabled: newNumber.text && newNumber.text !== "" && newNumber.text !== selectedTruck.number
             onClicked: DataProvider.updateTruckNumber(selectedTruck.id, newNumber.text)
         }
+
+        Button {
+            text: "Отмена"
+            onClicked: selectedTruck = null
+        }
     }
 
     ListView {
@@ -94,5 +99,5 @@ GridLayout {
         }
     }
 
-    onSelectedTruckChanged: newNumber.text = selectedTruck.number
+    onSelectedTruckChanged: newNumber.text = selectedTruck ? selectedTruck.number : ""
 }

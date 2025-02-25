@@ -40,6 +40,11 @@ GridLayout {
             enabled: newName.text && newName.text !== "" && newName.text !== selectedDriver.name
             onClicked: DataProvider.updateDriverName(selectedDriver.id, newName.text)
         }
+
+        Button {
+            text: "Отмена"
+            onClicked: selectedDriver = null
+        }
     }
 
     ListView {
@@ -90,5 +95,5 @@ GridLayout {
         }
     }
 
-    onSelectedDriverChanged: newName.text = selectedDriver.name
+    onSelectedDriverChanged: newName.text = selectedDriver ? selectedDriver.name : ""
 }

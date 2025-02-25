@@ -51,6 +51,11 @@ ColumnLayout {
                 (newName.text !== selectedClient.name || newAddress.text !== selectedClient.address)
             onClicked: DataProvider.updateClient(selectedClient.id, newName.text, newAddress.text)
         }
+
+        Button {
+            text: "Отмена"
+            onClicked: selectedClient = null
+        }
     }
 
     ListView {
@@ -72,7 +77,7 @@ ColumnLayout {
     }
 
     onSelectedClientChanged: {
-        newName.text = selectedClient.name
-        newAddress.text = selectedClient.address
+        newName.text = selectedClient ? selectedClient.name : ""
+        newAddress.text = selectedClient ? selectedClient.address : ""
     }
 }
