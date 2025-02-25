@@ -23,6 +23,12 @@ ApplicationWindow {
     property var tableData: []
     property var signatures: []
 
+    property var pageTableData: tableData.slice(currentPage * rowsOnPage, (currentPage + 1) * rowsOnPage)
+
+    property int rowsOnPage: 4
+    property int currentPage: 0
+    readonly property int pages: (tableData.length / rowsOnPage) + 1
+
     function getDateString() {
         let date = new Date
         let d = String(date.getDate()).padStart(2, '0')
@@ -42,8 +48,8 @@ ApplicationWindow {
         folder: shortcuts.desktop
         nameFilters: ['Изображение (*.png)']
         onAccepted: {
-            var str = saveFileDialog.fileUrl.toString()
-            var path = saveFileDialog.fileUrl.toString().substring(8, str.length)
+            let str = saveFileDialog.fileUrl.toString()
+            let path = saveFileDialog.fileUrl.toString().substring(8, str.length)
             docRoot.grabToImage(function(result) {
                 result.saveToFile(saveFileDialog.fileUrl.toString().substring(8, str.length));
             });
@@ -76,7 +82,7 @@ ApplicationWindow {
             spacing: -1
 
             Repeater {
-                model: root.tableData
+                model: root.pageTableData
                 Row {
                     spacing: -1
                     width: parent.width
@@ -122,11 +128,6 @@ ApplicationWindow {
             Column {
                 spacing: root.scale * 8
 
-                Text {
-                    font.pointSize: root.scale * 2.8
-                    text: 'Документ сформирован ' + root.getDateString()
-                }
-
                 Repeater {
                     model: root.signatures
                     delegate: Row {
@@ -153,16 +154,45 @@ ApplicationWindow {
                         }
                     }
                 }
+
+                Row {
+                    spacing: root.scale * 16
+
+                    Text {
+                        font.pointSize: root.scale * 2.8
+                        text: 'Документ сформирован ' + root.getDateString()
+                    }
+
+                    Text {
+                        font.pointSize: root.scale * 2.8
+                        text: 'Страница ' + (currentPage + 1) + ' из ' + pages
+                    }
+                }
             }
         }
     }
 
-    Button {
-        text: 'Сохранить...'
-        onClicked: saveFileDialog.open()
+    Row {
         anchors {
             top: root.top
             left: root.left
+        }
+
+        Button {
+            text: 'Сохранить страницу...'
+            onClicked: saveFileDialog.open()
+        }
+
+        Button {
+            text: 'Предыдущая страница'
+            enabled: root.currentPage > 0
+            onClicked: root.currentPage--
+        }
+
+        Button {
+            text: 'Следующая страница'
+            enabled: root.currentPage + 1 < root.pages
+            onClicked: root.currentPage++
         }
     }
 }
