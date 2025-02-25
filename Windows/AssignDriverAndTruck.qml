@@ -94,9 +94,14 @@ Window {
             text: "Назначить"
             Layout.alignment: Qt.AlignHCenter
             onClicked: {
+                if (orderId === -1) {
+                    console.log('Что-то пошло не так')
+                    return
+                }
+
                 const driverId = driver.currentValue
                 const truckId = truck.currentValue
-                DataProvider.assignTruckAndDriver(driverId, truckId, date.selectedDate)
+                DataProvider.assignTruckAndDriver(root.orderId, driverId, truckId, date.selectedDate)
                 root.close();
             }
         }

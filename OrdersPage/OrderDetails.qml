@@ -80,12 +80,15 @@ Rectangle {
             Button {
                 visible: root.model && root.model.driverName
                 text: 'Отметить как выполненный'
-                onClicked: DataProvider.markAsFinished(model.id)
+                onClicked: DataProvider.markAsFinished(root.model.id)
             }
             Button {
                 visible: root.model && !root.model.driverName
                 text: 'Назначить водителя и грузовик'
-                onClicked: assignDriverAndTruckWindow.show()
+                onClicked: {
+                    assignDriverAndTruckWindow.orderId = root.model.id
+                    assignDriverAndTruckWindow.show()
+                }
             }
             Button {
                 visible: root.model && !root.model.finished
