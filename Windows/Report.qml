@@ -25,7 +25,7 @@ ApplicationWindow {
 
     property var pageTableData: tableData.slice(currentPage * rowsOnPage, (currentPage + 1) * rowsOnPage)
 
-    property int rowsOnPage: 4
+    property int rowsOnPage: 16
     property int currentPage: 0
     readonly property int pages: (tableData.length / rowsOnPage) + 1
 
