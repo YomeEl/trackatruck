@@ -116,4 +116,17 @@ struct DriverReportRow
     }
 };
 
+struct RefuelingReportRow
+{
+    QString driverName;
+    double sum;
+
+    QVariantMap toMap() {
+        QVariantMap map;
+        map["driverName"] = driverName;
+        map["sum"] = sum;
+        return map;
+    }
+};
+
 #endif // TYPES_H

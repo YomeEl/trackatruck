@@ -52,6 +52,7 @@ public:
     Q_INVOKABLE void cancelOrder(int orderId);
 
     Q_INVOKABLE QVariantList getDriverReportData(QDateTime begin, QDateTime end);
+    Q_INVOKABLE QVariantList getRefuelingsReportData(QDateTime begin, QDateTime end);
 
 private:
     DataProvider();

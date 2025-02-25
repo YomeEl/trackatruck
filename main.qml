@@ -97,11 +97,21 @@ ApplicationWindow {
             Action {
                 text: qsTr("О расходах на топливо")
                 onTriggered: {
-                    timePeriodWindow = "Выбор временного интервала для отчёта расходах на топливо"
+                    timePeriodWindow.title = "Выбор временного интервала для отчёта о расходах на топливо"
 
                     timePeriodWindow.callback = (begin, end) => {
-                        console.log(begin, end)
-                        DataProvider.getDriverReportData(begin, end)
+                        const data = DataProvider.getRefuelingsReportData(begin, end)
+                        let rows = []
+                        for (const o of data) {
+                            rows.push([o.driverName, Helpers.formatMoney(o.sum)])
+                        }
+                        reportWindow.title = "Отчёт о расходах на топливо"
+                        reportWindow.tableHeader = ["ФИО водителя", "Расходы на топливо за период"]
+                        reportWindow.tableData = rows
+                        reportWindow.signatures = [{ title: "Бухгалтер", fields: ["ФИО", "подпись", "дата"] }]
+                        reportWindow.periodBegin = begin
+                        reportWindow.periodEnd = end
+                        reportWindow.show()
                     }
 
                     timePeriodWindow.show()

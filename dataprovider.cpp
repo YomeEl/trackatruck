@@ -305,7 +305,7 @@ void DataProvider::cancelOrder(int orderId)
 QVariantList DataProvider::getDriverReportData(QDateTime begin, QDateTime end)
 {
     const QString betweenString =
-        QString("between ") + str(convertDate(begin)) + " and " str(convertDate(end));
+        QString("between ") + str(convertDate(begin)) + " and " + str(convertDate(end));
 
     const QString queryStr =
         QString("select name, coalesce(distanceSum, 0), coalesce(cnt, 0) from drivers ") +
@@ -328,9 +328,42 @@ QVariantList DataProvider::getDriverReportData(QDateTime begin, QDateTime end)
             query.value(0).toString(),
             query.value(2).toUInt(),
             query.value(1).toDouble() / averageSpeedKmh,
-            query.value(1).toDouble()};
+            query.value(1).toDouble()
+        };
         list.append(QVariant::fromValue(row.toMap()));
     }
+
+    return list;
+}
+
+QVariantList DataProvider::getRefuelingsReportData(QDateTime begin, QDateTime end)
+{
+    const QString queryStr =
+        QString("select name, coalesce(sum, cast(0 as money)) from drivers ") +
+        QString("left join ") +
+        QString("    (select sum(cost) as sum, driver_id ") +
+        QString("    from refuelings ") +
+        QString("    where ") +
+        QString(QString("        date between ") + str(convertDate(begin)) + " and " + str(convertDate(end)) + " ") +
+        QString("    group by driver_id) ") +
+        QString("on driver_id = drivers.id ") +
+        QString("order by name");
+
+    QSqlQuery query(queryStr, _db);
+    QVariantList list;
+    double sum = 0;
+    while (query.next())
+    {
+        QString name = query.value(0).toString();
+        QString valueStr = query.value(1).toString();
+        valueStr.remove(QRegExp("[^0-9,]"));
+        valueStr.replace(',', '.');
+        double value = valueStr.toDouble();
+        sum += value;
+        auto row = RefuelingReportRow { name, value };
+        list.append(QVariant::fromValue(row.toMap()));
+    }
+    list.append(QVariant::fromValue(RefuelingReportRow { "Сумма", sum }.toMap()));
 
     return list;
 }
