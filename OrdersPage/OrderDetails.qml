@@ -80,6 +80,7 @@ Rectangle {
             Button {
                 visible: root.model && root.model.driverName
                 text: 'Отметить как выполненный'
+                onClicked: DataProvider.markAsFinished(model.id)
             }
             Button {
                 visible: root.model && !root.model.driverName
