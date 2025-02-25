@@ -109,6 +109,7 @@ QVector<Order> DataProvider::getOrders(const QString &condition)
         QString("left join trucks on orders.truck_id = trucks.id ") +
         QString("left join clients as src on orders.from_id = src.id ") +
         QString("left join clients as dst on orders.to_id = dst.id ") +
+        QString("order by driver_id is null desc, received_at > now() desc, received_at desc ") +
         condition;
     QVector<Order> vec;
 
